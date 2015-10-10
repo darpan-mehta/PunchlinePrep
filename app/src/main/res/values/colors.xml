@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- color codes for tabs and slider-->
+    <color name="sliderBackground">#fce4ee</color>
+    <color name="sliderFont">#f06392</color>
+    <color name="tabIndicator">#3c393a</color>
+
+    <!-- general purpose color codes-->
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="lightBlue">#1589FF</color>
+    <color name="pink">#FC6C85</color>
+
+</resources>
