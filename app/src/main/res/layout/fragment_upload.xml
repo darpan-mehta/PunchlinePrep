@@ -17,6 +17,37 @@
         android:padding="5dp"
         android:layout_marginBottom="20dp" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Record"
+        android:id= "@+id/record"
+        />
+
+    <Button
+        android:layout_width="114dp"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        android:id="@+id/play" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:id= "@+id/stop" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:id="@+id/upload"/>
+
+    <TextView
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/mTextField"
+
+        android:layout_weight="0.06" />
 </LinearLayout>
 
 

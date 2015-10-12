@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -50,6 +51,7 @@ public class MainPage extends FragmentActivity {
             return tabTitles[position];
         }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
