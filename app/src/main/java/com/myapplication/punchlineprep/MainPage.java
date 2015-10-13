@@ -1,22 +1,36 @@
 package com.myapplication.punchlineprep;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by Darpan on 10/9/2015.
+ *
  */
-public class MainPage extends FragmentActivity {
+public class MainPage extends AppCompatActivity {
     String name;
     String type;
     Bitmap image;
@@ -24,7 +38,7 @@ public class MainPage extends FragmentActivity {
 
     public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
         final int PAGE_COUNT = 2;
-        private String tabTitles[] = new String[] {"Upload", "Feed"};
+        private String tabTitles[] = new String[] {"Feed", "Upload"};
 
         public SampleFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -38,9 +52,9 @@ public class MainPage extends FragmentActivity {
 
             switch(position) {
                 case 0:
-                    return UploadFragment.newInstance(position+1);
+                    return FeedFragment.newInstance(position);
                 case 1:
-                    return FeedFragment.newInstance(position + 1);
+                    return UploadFragment.newInstance(position);
                 default:
                     return null;
             }
@@ -54,9 +68,17 @@ public class MainPage extends FragmentActivity {
 
 
     @Override
+    @TargetApi(16)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+
+        // Create filepath for jokes if it does not exist
+        String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/";
+        File f = new File(filepath);
+        if(!f.exists()){
+            f.mkdirs();
+        }
 
         name = getIntent().getStringExtra("name");
 
@@ -92,6 +114,7 @@ public class MainPage extends FragmentActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
 
 

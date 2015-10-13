@@ -17,6 +17,13 @@
         android:padding="5dp"
         android:layout_marginBottom="20dp" />
 
+    <EditText
+        android:id="@+id/jokeName"
+        android:hint="Enter a Joke Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
