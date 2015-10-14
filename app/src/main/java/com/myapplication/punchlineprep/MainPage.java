@@ -35,8 +35,9 @@ public class MainPage extends AppCompatActivity {
     String type;
     Bitmap image;
     int page;
+    public static final String TAG = "taggy";
 
-    public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
+    public class SampleFragmentPagerAdapter extends FragmentPagerAdapter{
         final int PAGE_COUNT = 2;
         private String tabTitles[] = new String[] {"Feed", "Upload"};
 
@@ -85,6 +86,7 @@ public class MainPage extends AppCompatActivity {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new SampleFragmentPagerAdapter(getSupportFragmentManager()));
+        Log.v(TAG,"WHKHJK");
 
         // Give the PagerSlidingTabStrip the ViewPager
         PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
