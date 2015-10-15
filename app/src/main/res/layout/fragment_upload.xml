@@ -53,8 +53,9 @@
         android:layout_width="196dp"
         android:layout_height="wrap_content"
         android:id="@+id/mTextField"
-
-        android:layout_weight="0.06" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_weight="0.32" />
 </LinearLayout>
 
 

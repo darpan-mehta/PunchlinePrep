@@ -77,7 +77,8 @@ public class MainPage extends AppCompatActivity {
         // Create filepath for jokes if it does not exist
         String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/";
         File f = new File(filepath);
-        if(!f.exists()){
+        if(!f.exists())
+        {
             f.mkdirs();
         }
 
