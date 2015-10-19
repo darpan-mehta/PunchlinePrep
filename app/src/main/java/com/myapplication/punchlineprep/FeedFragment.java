@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.File;
@@ -27,8 +28,6 @@ public class FeedFragment extends Fragment{
     Integer[] playBtn;
     ListView listView;
     SwipeRefreshLayout swipeView;
-
-
 
     public static FeedFragment newInstance (int page) {
         Bundle args = new Bundle();

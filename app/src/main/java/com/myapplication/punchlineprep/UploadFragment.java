@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import java.io.IOException;
 
@@ -27,15 +29,22 @@ import java.io.IOException;
  * Created by Darpan on 10/9/2015.
  *
  */
-public class UploadFragment extends Fragment{
+public class UploadFragment extends Fragment {
     public static final String ARG_PAGE = "Arg_Page";
     public static final String TAG = "UploadFragment";
     Button play,stop,record,upload;
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
+    SeekBar seekBar;
+    private Handler myHandler;
+    private Runnable seekRun;
+    boolean previousRecord = false;
+    MediaPlayer m;
+    public TextView seekTime;
+    int currentPosition;
 
     private boolean timerStarted = false;
-  //  public TextView mTextField;
+    public TextView mTextField;
     private final long startTime = 100 * 1000;
     private final long interval = 1 * 1000;
 
@@ -76,18 +85,18 @@ public class UploadFragment extends Fragment{
             stop.setVisibility(View.GONE);
             play.setEnabled(true);
             upload.setEnabled(true);
-
+            mTextField.setVisibility(View.GONE);
             Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
 
         }
 
     };
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setRetainInstance(true);
         super.onCreate(savedInstanceState);
+
 
 
 
@@ -98,7 +107,9 @@ public class UploadFragment extends Fragment{
         play = (Button) view.findViewById(R.id.play);
         stop = (Button) view.findViewById(R.id.stop);
         record = (Button) view.findViewById(R.id.record);
+        record.setText("Record");
         upload = (Button) view.findViewById(R.id.upload);
+        seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
 
 
         stop.setVisibility(View.GONE);
@@ -116,12 +127,14 @@ public class UploadFragment extends Fragment{
         myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         myAudioRecorder.setOutputFile(outputFile);
 
+
         record.setOnClickListener(new View.OnClickListener() {
             //Record metho
             @Override
             public void onClick(View v) {
 
                 if (!timerStarted) {
+                  //  mTextField.setVisibility(View.VISIBLE);
                     timer.start();
                     timerStarted = true;
                 }
@@ -157,8 +170,8 @@ public class UploadFragment extends Fragment{
                 if (timerStarted) {
                     timer.cancel();
                     timerStarted = false;
-                }
-
+                  //  mTextField.setVisibility(View.GONE);
+            }
 
 
                 play.setVisibility(View.VISIBLE);
@@ -173,10 +186,13 @@ public class UploadFragment extends Fragment{
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) throws IllegalArgumentException, SecurityException, IllegalStateException {
-                MediaPlayer m = new MediaPlayer();
+
+
+                 m = new MediaPlayer();
 
                 try {
                     m.setDataSource(outputFile);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -186,20 +202,43 @@ public class UploadFragment extends Fragment{
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                seekBar.setMax(m.getDuration());
+
+                /*
+                Derek - Handler and Runnable allows for Seekbar update in UI with
+                current position of the MediaPlayer
+                 */
+                myHandler = new Handler();
+                seekRun = new Runnable() {
+                    public void run() {
+                        if (m != null) {
+                            currentPosition = m.getCurrentPosition();
+                            seekBar.setProgress(currentPosition);
+                        }
+                        myHandler.postDelayed(this, 1000);
+                    }
+                };
+
+                seekRun.run();
 
                 m.start();
+
                 Toast.makeText(getActivity().getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
                 play.setVisibility(View.VISIBLE);
 
                 stop.setVisibility(View.GONE);
 
+
+
             }
 
         });
 
-    upload.setOnClickListener(new OnClickListener() {
+    upload.setOnClickListener(new
+
+    OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick (View v){
             Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG).show();
 
             EditText titleHolder = (EditText) getActivity().findViewById(R.id.jokeName);
@@ -214,8 +253,39 @@ public class UploadFragment extends Fragment{
         }
     });
 
+        /*
+        Derek - SeekBar Listener shows changes made to the seekbar by the user
+         */
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //Seekbar changes made from the user
+                if (m != null && fromUser) {
+                    m.seekTo(progress);
+                    m.start();
+                }
+
+            }
+        });
+
+
+
             return view;
         }
+
+
 
 
     }

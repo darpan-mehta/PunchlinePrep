@@ -27,7 +27,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "Record"
         android:id= "@+id/record"
         />
 
@@ -56,6 +55,18 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_weight="0.32" />
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekTime"
+        android:layout_weight="0.08" />
 </LinearLayout>
 
 
