@@ -1,6 +1,5 @@
 package com.myapplication.punchlineprep;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.media.MediaPlayer;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +22,6 @@ import java.io.IOException;
 
 /**
  * Created by Darpan on 10/9/2015.
- *
  */
 public class UploadFragment extends Fragment{
     public static final String ARG_PAGE = "Arg_Page";
@@ -44,8 +41,10 @@ public class UploadFragment extends Fragment{
 
 
     @Override
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         /*
         * Derek Charles - Implementation of the Recording and Upload
@@ -60,10 +59,9 @@ public class UploadFragment extends Fragment{
         //stop.setEnabled(false);
         play.setVisibility(View.GONE);
         //play.setEnabled(false);
+        int i = 0;
 
-        // Saves the recording as temp.3gp
-        // if "upload" button is never pressed, "temp.3gp" will always be in directory.
-        outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp";
+        outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + Integer.toString(i)+ ".3gp";
 
         myAudioRecorder = new MediaRecorder();
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -81,8 +79,8 @@ public class UploadFragment extends Fragment{
 
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
                 record.setEnabled(false);
@@ -159,20 +157,10 @@ public class UploadFragment extends Fragment{
             }
 
         });
-        upload.setOnClickListener(new OnClickListener() {
+                upload.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG).show();
-
-                EditText titleHolder = (EditText) getActivity().findViewById(R.id.jokeName);
-                String jokeTitle = titleHolder.getText().toString();
-                Log.v(TAG,jokeTitle);
-
-                // deletes the file "temp.3gp" and creates a new file with the joke title.
-                File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
-                File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
-                tempJoke.renameTo(myJoke);
-
 
                 //add insert SQL queries
             }
