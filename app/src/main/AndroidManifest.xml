@@ -5,11 +5,14 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
 
-    <application android:allowBackup="true" android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
+    <application
+        android:allowBackup="true"
+        android:label="Punchline Prep"
+        android:icon="@drawable/logo"
+        android:theme="@style/AppTheme">
 
         <activity android:name=".MainPage"
-            android:label="PunchlinePrep">
+            android:label="Punchline Prep">
 
 
             <intent-filter>
