@@ -38,8 +38,8 @@ public class MainPage extends AppCompatActivity {
     public static final String TAG = "taggy";
 
     public class SampleFragmentPagerAdapter extends FragmentPagerAdapter{
-        final int PAGE_COUNT = 2;
-        private String tabTitles[] = new String[] {"Feed", "Upload"};
+        final int PAGE_COUNT = 4;
+        private String tabTitles[] = new String[] {"Feed", "Upload", "My Jokes", "Top Jokes"};
 
         public SampleFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -53,9 +53,13 @@ public class MainPage extends AppCompatActivity {
 
             switch(position) {
                 case 0:
-                    return FeedFragment.newInstance(position);
+                    return FeedFragment.newInstance(position+1);
                 case 1:
-                    return UploadFragment.newInstance(position);
+                    return UploadFragment.newInstance(position+1);
+                case 2:
+                    return MyJokesFragment.newInstance(position+1);
+                case 3:
+                    return TopJokesFragment.newInstance(position+1);
                 default:
                     return null;
             }
@@ -65,6 +69,7 @@ public class MainPage extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return tabTitles[position];
         }
+
     }
 
 
@@ -94,6 +99,8 @@ public class MainPage extends AppCompatActivity {
 
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+
+
     }
 
     @Override
