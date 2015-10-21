@@ -54,6 +54,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         TextView txtTitle = (TextView) rowView.findViewById(R.id.joke);
         ImageButton playBtn = (ImageButton) rowView.findViewById(R.id.play);
         seekbar = (SeekBar) rowView.findViewById(R.id.seek_bar);
+        //
 
         txtTitle.setText(jokename[position]);
         playBtn.setImageResource(imgid[position]);
