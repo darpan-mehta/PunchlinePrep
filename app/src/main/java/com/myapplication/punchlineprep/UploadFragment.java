@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,7 @@ public class UploadFragment extends Fragment{
         * Derek Charles - Implementation of the Recording and Upload
          */
         View view = inflater.inflate(R.layout.fragment_upload, container, false);
-        play = (Button) view.findViewById(R.id.play);
+        final ImageButton play = (ImageButton) view.findViewById(R.id.play);
         stop = (Button) view.findViewById(R.id.stop);
         record = (Button) view.findViewById(R.id.record);
         upload = (Button) view.findViewById(R.id.upload);

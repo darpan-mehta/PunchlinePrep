@@ -31,8 +31,9 @@
         android:id= "@+id/record"
         />
 
-    <Button
-        android:layout_width="114dp"
+    <ImageButton
+        android:src="@drawable/testplaybtn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Play"
         android:id="@+id/play" />

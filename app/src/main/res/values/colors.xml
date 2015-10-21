@@ -10,5 +10,7 @@
     <color name="white">#ffffff</color>
     <color name="lightBlue">#1589FF</color>
     <color name="pink">#FC6C85</color>
-
+    <color name="blue">#005474</color>
+    <color name="orange">#F4A038</color>
+    <color name="green">#00A781</color>
 </resources>

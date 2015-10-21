@@ -69,6 +69,7 @@ public class MainPage extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return tabTitles[position];
         }
+
     }
 
 
@@ -97,6 +98,8 @@ public class MainPage extends AppCompatActivity {
 
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+
+
     }
 
     @Override
