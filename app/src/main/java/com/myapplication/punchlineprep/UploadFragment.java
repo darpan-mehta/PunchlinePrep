@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,8 @@ import java.io.IOException;
 public class UploadFragment extends Fragment{
     public static final String ARG_PAGE = "Arg_Page";
     public static final String TAG = "UploadFragment";
-    Button play,stop,record,upload;
+    Button stop,record,upload;
+    ImageButton play;
     TextView mTextField;
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
@@ -51,7 +53,7 @@ public class UploadFragment extends Fragment{
         * Derek Charles - Implementation of the Recording and Upload
          */
         View view = inflater.inflate(R.layout.fragment_upload, container, false);
-        play = (Button) view.findViewById(R.id.play);
+        play = (ImageButton) view.findViewById(R.id.play);
         stop = (Button) view.findViewById(R.id.stop);
         record = (Button) view.findViewById(R.id.record);
         upload = (Button) view.findViewById(R.id.upload);
