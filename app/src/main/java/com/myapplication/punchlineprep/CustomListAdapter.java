@@ -27,7 +27,6 @@ public class CustomListAdapter extends ArrayAdapter<String> {
     private final String[] jokename;
     private final Integer[] imgid;
     public static final String TAG = "UploadFragment";
-     SeekBar seekbar;
     Handler myHandler;
     private Runnable seekRun;
     MediaPlayer m;
@@ -53,7 +52,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.joke);
         ImageButton playBtn = (ImageButton) rowView.findViewById(R.id.play);
-        seekbar = (SeekBar) rowView.findViewById(R.id.seek_bar);
+        final SeekBar seekbar = (SeekBar) rowView.findViewById(R.id.seek_bar);
         
 
         txtTitle.setText(jokename[position]);
@@ -78,7 +77,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
                     e.printStackTrace();
                 }
 /*
-Derek - Addition of Seekbar , not yet fully functional
+Derek - Addition of Seekbar
  */
                 seekbar.setMax(m.getDuration());
                 myHandler = new Handler();

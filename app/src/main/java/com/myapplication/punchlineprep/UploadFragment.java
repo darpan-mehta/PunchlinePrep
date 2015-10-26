@@ -121,12 +121,11 @@ timer creation
             //Record metho
             @Override
             public void onClick(View v) {
-                
+
                 if (!timerStarted) {
                     timer.start();
                     timerStarted = true;
                 }
-
 
                 try {
                     myAudioRecorder.prepare();
