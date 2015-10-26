@@ -1,8 +1,11 @@
 package com.myapplication.punchlineprep;
 
 import java.io.File;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
@@ -91,6 +94,8 @@ timer creation
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         /*
         * Derek Charles - Implementation of the Recording and Upload
@@ -249,6 +254,19 @@ timer creation
                 File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
                 File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
                 tempJoke.renameTo(myJoke);
+
+                JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
+                //jokeDb.delTable();
+                jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0"));
+
+                List<JokeClass> jokes = jokeDb.getAllJokes();
+                String log ="";
+                for (JokeClass j : jokes) {
+                    log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
+                            + ", Downvotes: " + j.getDownvotes()+"\n";
+
+                }
+                Log.v(TAG, log);
 
 
                 //add insert SQL queries

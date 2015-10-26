@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by jtung on 10/13/2015.
@@ -25,19 +26,24 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
     private final String[] jokename;
-    private final Integer[] imgid;
+    private final Integer[] imgid,upbtnid,downbtnid,upvotesTxt,downvotesTxt;
     public static final String TAG = "UploadFragment";
     Handler myHandler;
     private Runnable seekRun;
     MediaPlayer m;
+    JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
 
     int currentPosition;
 
-    public CustomListAdapter(Activity context, String[] jokename, Integer[] imgid){
+    public CustomListAdapter(Activity context, String[] jokename, Integer[] imgid, Integer[] upbtnid, Integer[] downbtnid, Integer[] upvotesTxt, Integer[] downvotesTxt){
         super(context, R.layout.listview_layout, jokename);
         this.context=context;
         this.jokename=jokename;
         this.imgid=imgid;
+        this.upbtnid=upbtnid;
+        this.downbtnid=downbtnid;
+        this.upvotesTxt=upvotesTxt;
+        this.downvotesTxt=downvotesTxt;
     }
 
     public View getView(final int position,View view,ViewGroup parent) {
@@ -52,11 +58,19 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.joke);
         ImageButton playBtn = (ImageButton) rowView.findViewById(R.id.play);
+        ImageButton upVoteBtn = (ImageButton) rowView.findViewById(R.id.upvote);
+        ImageButton downVoteBtn = (ImageButton) rowView.findViewById(R.id.downvote);
         final SeekBar seekbar = (SeekBar) rowView.findViewById(R.id.seek_bar);
+        TextView numUpvotes = (TextView) rowView.findViewById(R.id.numUpvotes);
+        TextView numDownvotes = (TextView) rowView.findViewById(R.id.numDownvotes);
         
 
         txtTitle.setText(jokename[position]);
         playBtn.setImageResource(imgid[position]);
+        upVoteBtn.setImageResource(upbtnid[position]);
+        downVoteBtn.setImageResource(downbtnid[position]);
+        numUpvotes.setText(upvotesTxt[position].toString());
+        numDownvotes.setText(downvotesTxt[position].toString());
 
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +132,51 @@ Derek - Addition of Seekbar
         });
 
 
+        upVoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String log = "";
+                List<JokeClass> jokes = jokeDb.getAllJokes();
+                for (JokeClass j : jokes) {
+                    String jokeT = j.getTitle();
+                    Log.v(TAG, "JokeT: " + jokeT);
+                    String upInStr = j.getUpvotes();
+                    Integer upInInt = Integer.valueOf(upInStr);
+                    upInInt += 1;
+                    upInStr = upInInt.toString();
+                    j.setUpvotes(upInStr);
+                    jokeDb.updateJoke(j);
+
+                    log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
+                            + ", Downvotes: " + j.getDownvotes() + "\n";
+                }
+
+                Log.v(TAG, log);
+            }
+        });
+
+        downVoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String log = "";
+                List<JokeClass> jokes = jokeDb.getAllJokes();
+                for (JokeClass j : jokes) {
+                    String jokeT = j.getTitle();
+                    Log.v(TAG, "JokeT: " + jokeT);
+                    String upInStr = j.getDownvotes();
+                    Integer upInInt = Integer.valueOf(upInStr);
+                    upInInt += 1;
+                    upInStr = upInInt.toString();
+                    j.setDownvotes(upInStr);
+                    jokeDb.updateJoke(j);
+
+                    log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
+                            + ", Downvotes: " + j.getDownvotes() + "\n";
+                }
+
+                Log.v(TAG, log);
+            }
+        });
 
 
         return rowView;

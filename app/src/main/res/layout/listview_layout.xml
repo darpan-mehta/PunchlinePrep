@@ -17,7 +17,8 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/joke"            android:layout_width="wrap_content"
+            android:id="@+id/joke"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
@@ -28,10 +29,9 @@
             android:layout_height="40dp"
             android:id="@+id/upvote"
             android:scaleType="centerCrop"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/rsz_uparrow"
             android:background="@android:color/transparent"
+            android:layout_toLeftOf="@+id/numUpvotes"
+            android:layout_toStartOf="@+id/numUpvotes"
             />
 
         <ImageButton
@@ -40,17 +40,38 @@
             android:id="@+id/downvote"
             android:layout_below="@+id/upvote"
             android:scaleType="centerCrop"
+            android:background="@android:color/transparent"
+            android:layout_toLeftOf="@+id/numDownvotes"
+            android:layout_toStartOf="@+id/numDownvotes"/>
+
+        <TextView
+            android:id="@+id/numUpvotes"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/rsz_downarrow"
-            android:background="@android:color/transparent"
-            />
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/numDownvotes"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/numUpvotes"
+            android:textSize="20sp"/>
 
         <SeekBar
             android:id="@+id/seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:paddingRight="90dp"
+            android:paddingEnd="90dp" />
+
+
 
 
     </RelativeLayout>
