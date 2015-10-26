@@ -39,7 +39,7 @@ public class MainPage extends AppCompatActivity {
 
     public class SampleFragmentPagerAdapter extends FragmentPagerAdapter{
         final int PAGE_COUNT = 4;
-        private String tabTitles[] = new String[] {"Feed", "Upload", "My Jokes", "Top Jokes"};
+        private String tabTitles[] = new String[] {"Upload", "Feed", "Top Jokes", "My Jokes"};
 
         public SampleFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -53,13 +53,13 @@ public class MainPage extends AppCompatActivity {
 
             switch(position) {
                 case 0:
-                    return FeedFragment.newInstance(position+1);
-                case 1:
                     return UploadFragment.newInstance(position+1);
+                case 1:
+                    return FeedFragment.newInstance(position+1);
                 case 2:
-                    return MyJokesFragment.newInstance(position+1);
-                case 3:
                     return TopJokesFragment.newInstance(position+1);
+                case 3:
+                    return MyJokesFragment.newInstance(position+1);
                 default:
                     return null;
             }
@@ -100,6 +100,8 @@ public class MainPage extends AppCompatActivity {
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
 
+        viewPager.setCurrentItem(1,false);
+
 
     }
 
@@ -107,6 +109,7 @@ public class MainPage extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_upload_page, menu);
+
         return true;
     }
 
