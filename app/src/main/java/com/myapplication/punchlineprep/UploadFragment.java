@@ -30,8 +30,8 @@ import java.io.IOException;
 public class UploadFragment extends Fragment{
     public static final String ARG_PAGE = "Arg_Page";
     public static final String TAG = "UploadFragment";
-    Button stop,record,upload;
-    ImageButton play;
+    Button stop;
+    ImageButton play, record, upload;
     TextView mTextField;
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
@@ -55,8 +55,8 @@ public class UploadFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_upload, container, false);
         play = (ImageButton) view.findViewById(R.id.play);
         stop = (Button) view.findViewById(R.id.stop);
-        record = (Button) view.findViewById(R.id.record);
-        upload = (Button) view.findViewById(R.id.upload);
+        record = (ImageButton) view.findViewById(R.id.record);
+        upload = (ImageButton) view.findViewById(R.id.upload);
 
         stop.setVisibility(View.GONE);
         //stop.setEnabled(false);

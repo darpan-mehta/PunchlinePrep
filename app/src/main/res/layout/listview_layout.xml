@@ -17,8 +17,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/joke"
-            android:layout_width="wrap_content"
+            android:id="@+id/joke"            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
@@ -31,7 +30,7 @@
             android:scaleType="centerCrop"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/testup"
+            android:src="@drawable/rsz_uparrow"
             android:background="@android:color/transparent"
             />
 
@@ -43,7 +42,7 @@
             android:scaleType="centerCrop"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/testdown"
+            android:src="@drawable/rsz_downarrow"
             android:background="@android:color/transparent"
             />
 

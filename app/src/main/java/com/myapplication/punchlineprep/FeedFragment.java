@@ -99,7 +99,7 @@ public class FeedFragment extends Fragment{
         for (int i= 0; i<file.length ; i++) {
             int endindex = file[i].getName().indexOf(".3gp");
             itemname[i] = file[i].getName().substring(0,endindex);
-            playBtn[i] = R.drawable.testplaybtn; // set the play button for each joke
+            playBtn[i] = R.drawable.rsz_play; // set the play button for each joke
         }
 
         //If we want to display the array backwards
