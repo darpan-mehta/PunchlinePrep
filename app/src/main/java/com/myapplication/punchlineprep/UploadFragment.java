@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,12 @@ public class UploadFragment extends Fragment{
     TextView mTextField;
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
+    MediaPlayer m;
+    int currentPosition;
+    SeekBar seekBar;
+    boolean timerStarted;
+    private Handler myHandler;
+    private Runnable seekRun;
 
     public static UploadFragment newInstance (int page) {
         Bundle args = new Bundle();
@@ -43,6 +51,40 @@ public class UploadFragment extends Fragment{
         fragment.setArguments(args);
         return fragment;
     }
+
+    /* Derek
+timer creation
+ */
+    CountDownTimer timer = new CountDownTimer(90000, 1) {
+
+        public void onTick(long millisUntilFinished) {
+            TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
+            mTextField.setText("" + millisUntilFinished / 1000
+                    + ":" + millisUntilFinished % 1000);
+
+        }
+
+
+        public void onFinish() {
+            TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
+            mTextField.setText("0:000");
+            timerStarted = false;
+            //added so timer finish acts the same as pressing Stop button
+            myAudioRecorder.stop();
+            myAudioRecorder.release();
+            myAudioRecorder = null;
+
+            play.setVisibility(View.VISIBLE);
+            stop.setVisibility(View.GONE);
+            play.setEnabled(true);
+            upload.setEnabled(true);
+            mTextField.setVisibility(View.GONE);
+            Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
+
+        }
+
+    };
+
 
 
     @Override
@@ -57,6 +99,7 @@ public class UploadFragment extends Fragment{
         stop = (Button) view.findViewById(R.id.stop);
         record = (ImageButton) view.findViewById(R.id.record);
         upload = (ImageButton) view.findViewById(R.id.upload);
+        seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
 
         stop.setVisibility(View.GONE);
         //stop.setEnabled(false);
@@ -116,13 +159,17 @@ public class UploadFragment extends Fragment{
             }
         });
 
-        stop.setOnClickListener(new View.OnClickListener(){
+        stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 myAudioRecorder.stop();
                 myAudioRecorder.release();
                 myAudioRecorder = null;
-
+                if (timerStarted) {
+                    timer.cancel();
+                    timerStarted = false;
+                    //  mTextField.setVisibility(View.GONE);
+                }
 
                 play.setVisibility(View.VISIBLE);
                 stop.setVisibility(View.GONE);
@@ -132,31 +179,52 @@ public class UploadFragment extends Fragment{
                 Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
 
             }
-    });
-        play.setOnClickListener(new View.OnClickListener(){
+        });
+        play.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) throws IllegalArgumentException,SecurityException,IllegalStateException {
-                MediaPlayer m = new MediaPlayer();
+            public void onClick(View v) throws IllegalArgumentException, SecurityException, IllegalStateException {
+
+
+                m = new MediaPlayer();
 
                 try {
                     m.setDataSource(outputFile);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 try {
                     m.prepare();
-                }
-
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
+                seekBar.setMax(m.getDuration());
+
+                /*
+                Derek - Handler and Runnable allows for Seekbar update in UI with
+                current position of the MediaPlayer
+                 */
+                myHandler = new Handler();
+                seekRun = new Runnable() {
+                    public void run() {
+                        if (m != null) {
+                            currentPosition = m.getCurrentPosition();
+                            seekBar.setProgress(currentPosition);
+                        }
+                        myHandler.postDelayed(this, 1000);
+                    }
+                };
+
+                seekRun.run();
 
                 m.start();
+
                 Toast.makeText(getActivity().getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
                 play.setVisibility(View.VISIBLE);
 
                 stop.setVisibility(View.GONE);
+
 
             }
 
@@ -168,7 +236,7 @@ public class UploadFragment extends Fragment{
 
                 EditText titleHolder = (EditText) getActivity().findViewById(R.id.jokeName);
                 String jokeTitle = titleHolder.getText().toString();
-                Log.v(TAG,jokeTitle);
+                Log.v(TAG, jokeTitle);
 
                 // deletes the file "temp.3gp" and creates a new file with the joke title.
                 File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
@@ -180,7 +248,36 @@ public class UploadFragment extends Fragment{
             }
         });
 
-            return view;
+
+        /*
+        Derek - SeekBar Listener shows changes made to the seekbar by the user
+         */
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //Seekbar changes made from the user
+                if (m != null && fromUser) {
+                    m.seekTo(progress);
+                    m.start();
+                }
+
+            }
+        });
+
+
+        return view;
         }
 
 /*

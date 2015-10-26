@@ -17,6 +17,13 @@
         android:padding="5dp"
         android:layout_marginBottom="20dp" />
 
+    <TextView
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/mTextField"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
     <EditText
         android:id="@+id/jokeName"
         android:hint="Enter a Joke Name"
@@ -63,14 +70,6 @@
         android:text="Upload"
         android:id="@+id/upload"
         android:layout_gravity="center"/>
-
-    <TextView
-        android:layout_width="196dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/mTextField"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_weight="0.32" />
 
 
     <TextView
