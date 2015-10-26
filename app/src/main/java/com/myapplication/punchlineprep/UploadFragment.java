@@ -78,7 +78,8 @@ timer creation
             stop.setVisibility(View.GONE);
             play.setEnabled(true);
             upload.setEnabled(true);
-            mTextField.setVisibility(View.GONE);
+
+
             Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
 
         }
@@ -120,6 +121,13 @@ timer creation
             //Record metho
             @Override
             public void onClick(View v) {
+                
+                if (!timerStarted) {
+                    timer.start();
+                    timerStarted = true;
+                }
+
+
                 try {
                     myAudioRecorder.prepare();
                     myAudioRecorder.start();
