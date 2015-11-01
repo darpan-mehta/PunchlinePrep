@@ -70,9 +70,9 @@ public class FeedFragment extends Fragment{
         String log ="";
         for (JokeClass j : jokes) {
             itemname[i] = j.getTitle();
-            playBtn[i] = R.drawable.rsz_play; // set the play button for each joke
-            upVoteBtn[i] = R.drawable.rsz_uparrow;
-            downVoteBtn[i] = R.drawable.rsz_downarrow;
+            playBtn[i] = R.drawable.play; // set the play button for each joke
+            upVoteBtn[i] = R.drawable.uparrow;
+            downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = Integer.valueOf(j.getUpvotes());
             numDownvotes[i] = Integer.valueOf(j.getDownvotes());
             i++;
@@ -172,9 +172,9 @@ public class FeedFragment extends Fragment{
         String log ="";
         for (JokeClass j : jokes) {
             itemname[i] = j.getTitle();
-            playBtn[i] = R.drawable.rsz_play; // set the play button for each joke
-            upVoteBtn[i] = R.drawable.rsz_uparrow;
-            downVoteBtn[i] = R.drawable.rsz_downarrow;
+            playBtn[i] = R.drawable.play; // set the play button for each joke
+            upVoteBtn[i] = R.drawable.uparrow;
+            downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = Integer.valueOf(j.getUpvotes());
             numDownvotes[i] = Integer.valueOf(j.getDownvotes());
             log = log+ "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()

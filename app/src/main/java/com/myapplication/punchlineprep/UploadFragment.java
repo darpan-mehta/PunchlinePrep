@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -35,8 +37,7 @@ import java.io.IOException;
 public class UploadFragment extends Fragment{
     public static final String ARG_PAGE = "Arg_Page";
     public static final String TAG = "UploadFragment";
-    Button stop;
-    ImageButton play, record, upload;
+    ImageButton play, record, upload, stop;
     TextView mTextField;
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
@@ -46,6 +47,9 @@ public class UploadFragment extends Fragment{
     boolean timerStarted;
     private Handler myHandler;
     private Runnable seekRun;
+
+    private Thread progressBarThread;
+    private int maxProgress;
 
     public static UploadFragment newInstance (int page) {
         Bundle args = new Bundle();
@@ -62,8 +66,11 @@ timer creation
 
         public void onTick(long millisUntilFinished) {
             TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
+            mTextField.setVisibility(View.VISIBLE);
             mTextField.setText("" + millisUntilFinished / 1000
                     + ":" + millisUntilFinished % 1000);
+            seekBar.setMax(90000);
+            seekBar.setProgress(90000-(int)millisUntilFinished);
 
         }
 
@@ -102,7 +109,7 @@ timer creation
          */
         View view = inflater.inflate(R.layout.fragment_upload, container, false);
         play = (ImageButton) view.findViewById(R.id.play);
-        stop = (Button) view.findViewById(R.id.stop);
+        stop = (ImageButton) view.findViewById(R.id.stop);
         record = (ImageButton) view.findViewById(R.id.record);
         upload = (ImageButton) view.findViewById(R.id.upload);
         seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
@@ -116,16 +123,16 @@ timer creation
         // if "upload" button is never pressed, "temp.3gp" will always be in directory.
         outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp";
 
-        myAudioRecorder = new MediaRecorder();
-        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        myAudioRecorder.setOutputFile(outputFile);
-
         record.setOnClickListener(new View.OnClickListener() {
             //Record metho
             @Override
             public void onClick(View v) {
+
+                myAudioRecorder = new MediaRecorder();
+                myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+                myAudioRecorder.setOutputFile(outputFile);
 
                 if (!timerStarted) {
                     timer.start();
@@ -174,28 +181,38 @@ timer creation
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myAudioRecorder.stop();
-                myAudioRecorder.release();
-                myAudioRecorder = null;
+                if (myAudioRecorder != null) {
+                    myAudioRecorder.stop();
+                    myAudioRecorder.release();
+                    myAudioRecorder = null;
+                    Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
+                }
                 if (timerStarted) {
                     timer.cancel();
                     timerStarted = false;
                     //  mTextField.setVisibility(View.GONE);
                 }
+                if (progressBarThread != null) {
+                    progressBarThread.interrupt();
+                }
+                if (m != null) {
+                    m.pause();
+                    m.release();
+                    m = null;
+                }
 
                 play.setVisibility(View.VISIBLE);
                 stop.setVisibility(View.GONE);
+                record.setEnabled(true);
                 play.setEnabled(true);
                 upload.setEnabled(true);
-
-                Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
+                seekBar.setProgress(0);
 
             }
         });
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) throws IllegalArgumentException, SecurityException, IllegalStateException {
-
 
                 m = new MediaPlayer();
 
@@ -211,13 +228,14 @@ timer creation
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                seekBar.setMax(m.getDuration());
+                maxProgress = m.getDuration();
+                seekBar.setMax(maxProgress);
 
                 /*
                 Derek - Handler and Runnable allows for Seekbar update in UI with
                 current position of the MediaPlayer
                  */
-                myHandler = new Handler();
+               /* myHandler = new Handler();
                 seekRun = new Runnable() {
                     public void run() {
                         if (m != null) {
@@ -226,16 +244,44 @@ timer creation
                         }
                         myHandler.postDelayed(this, 1000);
                     }
-                };
+                };*/
 
-                seekRun.run();
+                progressBarThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.interrupted()) {
+                            if (m != null) {
+                                currentPosition = m.getCurrentPosition();
+                                updateProgress(currentPosition);
+
+                                if (currentPosition >= maxProgress) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            seekBar.setProgress(0);
+                                            stop.setVisibility(View.GONE);
+                                            play.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                    return;
+                                }
+                            }
+                            try {
+                                Thread.sleep(10);
+                            } catch(Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                progressBarThread.start();
 
                 m.start();
 
                 Toast.makeText(getActivity().getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
-                play.setVisibility(View.VISIBLE);
+                play.setVisibility(View.GONE);
 
-                stop.setVisibility(View.GONE);
+                stop.setVisibility(View.VISIBLE);
 
 
             }
@@ -244,32 +290,50 @@ timer creation
         upload.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG).show();
 
                 EditText titleHolder = (EditText) getActivity().findViewById(R.id.jokeName);
                 String jokeTitle = titleHolder.getText().toString();
                 Log.v(TAG, jokeTitle);
 
-                // deletes the file "temp.3gp" and creates a new file with the joke title.
-                File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
-                File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
-                tempJoke.renameTo(myJoke);
+                if(jokeTitle.equals("") || jokeTitle.equals("Enter a Joke Name")){
 
-                JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
-                //jokeDb.delTable();
-                jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0"));
-
-                List<JokeClass> jokes = jokeDb.getAllJokes();
-                String log ="";
-                for (JokeClass j : jokes) {
-                    log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
-                            + ", Downvotes: " + j.getDownvotes()+"\n";
+                    Toast.makeText(getActivity().getApplicationContext(), "Please enter a joke title! Numbnut....", Toast.LENGTH_LONG).show();
 
                 }
-                Log.v(TAG, log);
+                else
+                {
+                    Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG).show();
+
+                    // deletes the file "temp.3gp" and creates a new file with the joke title.
+                    File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
+                    File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
+                    tempJoke.renameTo(myJoke);
+
+                    JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
+                    //jokeDb.delTable();
+                    jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0"));
+
+                    List<JokeClass> jokes = jokeDb.getAllJokes();
+                    String log ="";
+                    for (JokeClass j : jokes) {
+                        log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
+                                + ", Downvotes: " + j.getDownvotes()+"\n";
+
+                    }
+                    Log.v(TAG, log);
 
 
-                //add insert SQL queries
+                    //add insert SQL queries
+
+                    //Reset Upload Screen
+                    play.setVisibility(View.GONE);
+                    seekBar.setProgress(0);
+                    ((TextView) getView().findViewById(R.id.mTextField)).setVisibility(View.GONE);
+                    ((TextView) getView().findViewById(R.id.jokeName)).setText("");
+
+
+                }
+
             }
         });
 
@@ -304,6 +368,10 @@ timer creation
 
         return view;
         }
+
+    private void updateProgress(int progress) {
+        seekBar.setProgress(progress);
+    }
 
 /*
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

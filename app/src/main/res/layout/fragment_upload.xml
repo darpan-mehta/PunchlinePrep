@@ -10,18 +10,6 @@
     android:background="@color/white"
     android:weightSum="1">
 
-    <TextView
-        android:id="@+id/bar"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:textSize="20sp"
-        android:background="@color/lightBlue"
-        android:textColor="@color/black"
-        android:text="Upload Fragment"
-        android:gravity="center"
-        android:padding="5dp"
-        android:layout_marginBottom="20dp" />
-
     <EditText
         android:id="@+id/jokeName"
         android:hint="Enter a Joke Name"
@@ -37,7 +25,8 @@
         android:layout_height="233dp"
         android:text="Record"
         android:id= "@+id/record"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"/>
 
     <ImageButton
         android:src="@drawable/uploadplay"
@@ -45,14 +34,17 @@
         android:layout_height="233dp"
         android:text="Play"
         android:id="@+id/play"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"/>
 
-    <Button
+    <ImageButton
+        android:src="@drawable/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stop"
         android:id= "@+id/stop"
         android:layout_gravity="center"
+        android:background="@android:color/transparent"
         />
 
     <SeekBar
@@ -70,11 +62,13 @@
 
     <ImageButton
         android:src="@drawable/upload"
-        android:layout_width="308dp"
-        android:layout_height="93dp"
+        android:layout_width="228dp"
+        android:layout_height="128dp"
         android:text="Upload"
         android:id="@+id/upload"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"/>
 
 
     <TextView

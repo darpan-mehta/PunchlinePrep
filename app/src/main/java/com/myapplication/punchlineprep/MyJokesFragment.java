@@ -60,9 +60,9 @@ public class MyJokesFragment extends Fragment {
         for (int i= 0; i<file.length ; i++) {
             int endindex = file[i].getName().indexOf(".3gp");
             itemname[i] = file[i].getName().substring(0,endindex);
-            playBtn[i] = R.drawable.rsz_play; // set the play button for each joke
-            upVoteBtn[i] = R.drawable.rsz_uparrow;
-            downVoteBtn[i] = R.drawable.rsz_downarrow;
+            playBtn[i] = R.drawable.play; // set the play button for each joke
+            upVoteBtn[i] = R.drawable.uparrow;
+            downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = 0;
             numDownvotes[i] = 0;
 
@@ -108,9 +108,9 @@ public class MyJokesFragment extends Fragment {
         for (int i= 0; i<file.length ; i++) {
             int endindex = file[i].getName().indexOf(".3gp");
             itemname[i] = file[i].getName().substring(0,endindex);
-            playBtn[i] = R.drawable.rsz_play; // set the play button for each joke
-            upVoteBtn[i] = R.drawable.rsz_uparrow;
-            downVoteBtn[i] = R.drawable.rsz_downarrow;
+            playBtn[i] = R.drawable.play; // set the play button for each joke
+            upVoteBtn[i] = R.drawable.uparrow;
+            downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = 0;
             numDownvotes[i] = 0;
         }
