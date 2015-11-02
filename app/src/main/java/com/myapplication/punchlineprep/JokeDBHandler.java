@@ -30,6 +30,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
     private static final String COL_TITLE = "title";
     private static final String COL_UPVOTES = "upvotes";
     private static final String COL_DOWNVOTES = "downvotes";
+    private static final String COL_LENGTH = "length";
 
     public static synchronized JokeDBHandler getInstance(Context context){
         if (sInstance == null){
@@ -48,7 +49,8 @@ public class JokeDBHandler extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + JOKES_TABLE + "("
                 + COL_ID + " INTEGER PRIMARY KEY," + COL_TITLE + " TEXT,"
                 + COL_UPVOTES + " TEXT,"
-                + COL_DOWNVOTES + " TEXT"
+                + COL_DOWNVOTES + " TEXT,"
+                + COL_LENGTH + " TEXT"
                 + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
@@ -76,6 +78,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
         values.put(COL_TITLE, joke.getTitle());
         values.put(COL_UPVOTES, joke.getUpvotes());
         values.put(COL_DOWNVOTES, joke.getDownvotes());
+        values.put(COL_LENGTH, joke.getLength());
 
         // Inserting Row
         db.insert(JOKES_TABLE, null, values);
@@ -98,6 +101,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
                 joke.setTitle(cursor.getString(1));
                 joke.setUpvotes(cursor.getString(2));
                 joke.setDownvotes(cursor.getString(3));
+                joke.setLength(cursor.getString(4));
                 // Adding joke to list
                 jokeList.add(joke);
             } while (cursor.moveToNext());
@@ -128,6 +132,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
         values.put(COL_TITLE, joke.getTitle());
         values.put(COL_UPVOTES, joke.getUpvotes());
         values.put(COL_DOWNVOTES, joke.getDownvotes());
+        values.put(COL_LENGTH,joke.getLength());
 
         // updating row
         return db.update(JOKES_TABLE, values, COL_ID + " = ?",

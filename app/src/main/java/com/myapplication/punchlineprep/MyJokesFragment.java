@@ -21,7 +21,7 @@ public class MyJokesFragment extends Fragment {
 
     public static final String ARG_PAGE = "Arg_Page";
     public static final String TAG = "MyJokesFragment";
-    String[] itemname;
+    String[] itemname,audiolength;
     Integer[] playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes;
     ListView listView;
     SwipeRefreshLayout swipeView;
@@ -56,6 +56,7 @@ public class MyJokesFragment extends Fragment {
         downVoteBtn = new Integer[file.length];
         numUpvotes = new Integer[file.length];
         numDownvotes = new Integer[file.length];
+        audiolength = new String[file.length];
 
         for (int i= 0; i<file.length ; i++) {
             int endindex = file[i].getName().indexOf(".3gp");
@@ -65,18 +66,31 @@ public class MyJokesFragment extends Fragment {
             downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = 0;
             numDownvotes[i] = 0;
+            audiolength[i] = "41m";
 
         }
 
         //If we want to display the array backwards
         int midPt = itemname.length /2;
         for (int i = 0; i<midPt; i++){
-            String temp = itemname[i];
+            String itemtemp = itemname[i];
             itemname[i] = itemname[itemname.length-i-1];
-            itemname[itemname.length-i-1] = temp;
+            itemname[itemname.length-i-1] = itemtemp;
+
+            Integer numUptemp = numUpvotes[i];
+            numUpvotes[i] = numUpvotes[numUpvotes.length-i-1];
+            numUpvotes[numUpvotes.length-i-1] = numUptemp;
+
+            Integer numDowntemp = numUpvotes[i];
+            numDownvotes[i] = numDownvotes[numDownvotes.length-i-1];
+            numDownvotes[numDownvotes.length-i-1] = numDowntemp;
+
+            String lengthtemp = audiolength[i];
+            audiolength[i] = audiolength[audiolength.length-i-1];
+            audiolength[audiolength.length-i-1] = lengthtemp;
         }
 
-        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes);
+        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes,audiolength);
 
         listView = (ListView) rootView.findViewById(R.id.list);
         listView.setAdapter(adapter);
@@ -103,6 +117,7 @@ public class MyJokesFragment extends Fragment {
         downVoteBtn = new Integer[file.length];
         numUpvotes = new Integer[file.length];
         numDownvotes = new Integer[file.length];
+        audiolength = new String[file.length];
 
 
         for (int i= 0; i<file.length ; i++) {
@@ -113,17 +128,30 @@ public class MyJokesFragment extends Fragment {
             downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = 0;
             numDownvotes[i] = 0;
+            audiolength[i] = "41m";
         }
 
         //If we want to display the array backwards
         int midPt = itemname.length /2;
         for (int i = 0; i<midPt; i++){
-            String temp = itemname[i];
+            String itemtemp = itemname[i];
             itemname[i] = itemname[itemname.length-i-1];
-            itemname[itemname.length-i-1] = temp;
+            itemname[itemname.length-i-1] = itemtemp;
+
+            Integer numUptemp = numUpvotes[i];
+            numUpvotes[i] = numUpvotes[numUpvotes.length-i-1];
+            numUpvotes[numUpvotes.length-i-1] = numUptemp;
+
+            Integer numDowntemp = numUpvotes[i];
+            numDownvotes[i] = numDownvotes[numDownvotes.length-i-1];
+            numDownvotes[numDownvotes.length-i-1] = numDowntemp;
+
+            String lengthtemp = audiolength[i];
+            audiolength[i] = audiolength[audiolength.length-i-1];
+            audiolength[audiolength.length-i-1] = lengthtemp;
         }
 
-        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes);
+        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes,audiolength);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

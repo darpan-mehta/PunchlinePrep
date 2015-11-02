@@ -25,7 +25,7 @@ import java.util.List;
 public class FeedFragment extends Fragment{
     public static final String ARG_PAGE = "Arg_Page";
     public static final String TAG = "FeedFragment";
-    String[] itemname;
+    String[] itemname,audiolength;
     Integer[] playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes;
     ListView listView;
     SwipeRefreshLayout swipeView;
@@ -65,6 +65,7 @@ public class FeedFragment extends Fragment{
         downVoteBtn = new Integer[jokeCount];
         numUpvotes = new Integer[jokeCount];
         numDownvotes = new Integer[jokeCount];
+        audiolength = new String[jokeCount];
 
         int i =0;
         String log ="";
@@ -75,15 +76,28 @@ public class FeedFragment extends Fragment{
             downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = Integer.valueOf(j.getUpvotes());
             numDownvotes[i] = Integer.valueOf(j.getDownvotes());
+            audiolength[i] = j.getLength();
             i++;
         }
 
         //If we want to display the array backwards
         int midPt = itemname.length /2;
-        for (int j = 0; i<midPt; i++){
-            String temp = itemname[j];
+        for (int j = 0; j<midPt; j++){
+            String itemtemp = itemname[j];
             itemname[j] = itemname[itemname.length-j-1];
-            itemname[itemname.length-j-1] = temp;
+            itemname[itemname.length-j-1] = itemtemp;
+
+            Integer numUptemp = numUpvotes[j];
+            numUpvotes[j] = numUpvotes[numUpvotes.length-j-1];
+            numUpvotes[numUpvotes.length-j-1] = numUptemp;
+
+            Integer numDowntemp = numUpvotes[j];
+            numDownvotes[j] = numDownvotes[numDownvotes.length-j-1];
+            numDownvotes[numDownvotes.length-j-1] = numDowntemp;
+
+            String lengthtemp = audiolength[j];
+            audiolength[j] = audiolength[audiolength.length-j-1];
+            audiolength[audiolength.length-j-1] = lengthtemp;
         }
 
 /*
@@ -114,7 +128,7 @@ public class FeedFragment extends Fragment{
             itemname[itemname.length-i-1] = temp;
         }*/
 
-        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes);
+        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes,audiolength);
 
         listView = (ListView) rootView.findViewById(R.id.list);
         listView.setAdapter(adapter);
@@ -167,6 +181,9 @@ public class FeedFragment extends Fragment{
         playBtn = new Integer[jokeCount];
         upVoteBtn = new Integer[jokeCount];
         downVoteBtn = new Integer[jokeCount];
+        numUpvotes = new Integer[jokeCount];
+        numDownvotes = new Integer[jokeCount];
+        audiolength = new String[jokeCount];
 
         int i =0;
         String log ="";
@@ -177,6 +194,7 @@ public class FeedFragment extends Fragment{
             downVoteBtn[i] = R.drawable.downarrow;
             numUpvotes[i] = Integer.valueOf(j.getUpvotes());
             numDownvotes[i] = Integer.valueOf(j.getDownvotes());
+            audiolength[i] = j.getLength();
             log = log+ "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
                     + ", Downvotes: " + j.getDownvotes()+"\n";
             i++;
@@ -185,13 +203,25 @@ public class FeedFragment extends Fragment{
 
         //If we want to display the array backwards
         int midPt = itemname.length /2;
-        for (int j = 0; i<midPt; i++){
-            String temp = itemname[j];
+        for (int j = 0; j<midPt; j++){
+            String itemtemp = itemname[j];
             itemname[j] = itemname[itemname.length-j-1];
-            itemname[itemname.length-j-1] = temp;
+            itemname[itemname.length-j-1] = itemtemp;
+
+            Integer numUptemp = numUpvotes[j];
+            numUpvotes[j] = numUpvotes[numUpvotes.length-j-1];
+            numUpvotes[numUpvotes.length-j-1] = numUptemp;
+
+            Integer numDowntemp = numUpvotes[j];
+            numDownvotes[j] = numDownvotes[numDownvotes.length-j-1];
+            numDownvotes[numDownvotes.length-j-1] = numDowntemp;
+
+            String lengthtemp = audiolength[j];
+            audiolength[j] = audiolength[audiolength.length-j-1];
+            audiolength[audiolength.length-j-1] = lengthtemp;
         }
 
-        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes);
+        CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,upVoteBtn,downVoteBtn,numUpvotes,numDownvotes,audiolength);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

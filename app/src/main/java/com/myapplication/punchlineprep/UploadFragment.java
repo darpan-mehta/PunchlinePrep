@@ -42,6 +42,7 @@ public class UploadFragment extends Fragment{
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
     MediaPlayer m;
+    String audioLength;
     int currentPosition;
     SeekBar seekBar;
     boolean timerStarted;
@@ -199,6 +200,7 @@ timer creation
                     m.pause();
                     m.release();
                     m = null;
+
                 }
 
                 play.setVisibility(View.VISIBLE);
@@ -230,6 +232,9 @@ timer creation
                 }
                 maxProgress = m.getDuration();
                 seekBar.setMax(maxProgress);
+
+                Log.v("durationtag","Duration:" + String.valueOf(maxProgress/1000));
+                audioLength = String.valueOf(maxProgress/1000) +"s";
 
                 /*
                 Derek - Handler and Runnable allows for Seekbar update in UI with
@@ -309,9 +314,10 @@ timer creation
                     File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
                     tempJoke.renameTo(myJoke);
 
+
                     JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
                     //jokeDb.delTable();
-                    jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0"));
+                    jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0",audioLength));
 
                     List<JokeClass> jokes = jokeDb.getAllJokes();
                     String log ="";

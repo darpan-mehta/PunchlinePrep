@@ -6,9 +6,9 @@
 
     <ImageButton
         android:id="@+id/play"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:padding="5dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="25dp"
         android:scaleType="centerCrop"
         android:background="@android:color/transparent"/>
 
@@ -25,29 +25,31 @@
             android:padding="2dp" />
 
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/upvote"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
             android:layout_toLeftOf="@+id/numUpvotes"
             android:layout_toStartOf="@+id/numUpvotes"
+            android:padding="4dp"
             />
 
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/downvote"
             android:layout_below="@+id/upvote"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
             android:layout_toLeftOf="@+id/numDownvotes"
-            android:layout_toStartOf="@+id/numDownvotes"/>
+            android:layout_toStartOf="@+id/numDownvotes"
+            android:padding="4dp"/>
 
         <TextView
             android:id="@+id/numUpvotes"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:gravity="center"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -55,8 +57,8 @@
 
         <TextView
             android:id="@+id/numDownvotes"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:gravity="center"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -68,8 +70,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:paddingRight="90dp"
-            android:paddingEnd="90dp" />
+            android:paddingRight="130dp"
+            android:paddingEnd="130dp"
+            android:enabled="false"/>
+
+        <TextView
+            android:id="@+id/audioLength"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:text="41m"
+            android:paddingBottom="20dp"
+            android:textColor="@color/orange"/>
 
 
 
