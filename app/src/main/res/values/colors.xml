@@ -13,4 +13,5 @@
     <color name="blue">#005474</color>
     <color name="orange">#F4A038</color>
     <color name="green">#00A781</color>
+    <color name="accent_material_light">#f59f00</color>
 </resources>

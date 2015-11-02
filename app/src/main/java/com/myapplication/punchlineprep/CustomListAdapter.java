@@ -30,8 +30,9 @@ public class CustomListAdapter extends ArrayAdapter<String> {
     public static final String TAG = "UploadFragment";
     Handler myHandler;
     private Runnable seekRun;
-    MediaPlayer m;
+     MediaPlayer m;
     JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
+    boolean start = false;
 
     int currentPosition;
 
@@ -75,38 +76,55 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) throws IllegalArgumentException, SecurityException, IllegalStateException {
-                m = new MediaPlayer();
-                String outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                        + "/Punchline/" + jokename[position] + ".3gp";
 
-                try {
-                    m.setDataSource(outputFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    m = new MediaPlayer();
+                    if (start == false) {
+                    String outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                            + "/Punchline/" + jokename[position] + ".3gp";
 
-                try {
-                    m.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        m.setDataSource(outputFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        m.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 /*
 Derek - Addition of Seekbar
  */
-                seekbar.setMax(m.getDuration());
-                myHandler = new Handler();
-                seekRun = new Runnable() {
-                    public void run() {
-                        if (m != null) {
-                            currentPosition = m.getCurrentPosition();
-                            seekbar.setProgress(currentPosition);
-                        }
-                        myHandler.postDelayed(this, 1000);
-                    }
-                };
+                    seekbar.setMax(m.getDuration());
+                    myHandler = new Handler();
+                    seekRun = new Runnable() {
+                        public void run() {
+                            if (m != null && currentPosition < m.getDuration()) {
 
-                seekRun.run();
-                m.start();
+                                currentPosition = m.getCurrentPosition();
+                                seekbar.setProgress(currentPosition);
+                                myHandler.postDelayed(this, 1000);
+                            }
+                            else if(m != null && currentPosition >= m.getDuration()) {
+                                currentPosition = 0;
+                                seekbar.setProgress(currentPosition);
+
+                            }
+                        }
+
+
+                    };
+
+                    seekRun.run();
+                    m.start();
+                        start = true;
+                }
+             else{
+                    m.stop();
+                    seekbar.setProgress(0);
+                    start = false;
+                }
             }
 
         });

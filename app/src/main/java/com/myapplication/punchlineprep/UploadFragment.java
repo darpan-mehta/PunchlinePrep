@@ -373,13 +373,4 @@ timer creation
         seekBar.setProgress(progress);
     }
 
-/*
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_upload,container,false);
-
-        return rootView;
-    }
-
-    */
-
         }
