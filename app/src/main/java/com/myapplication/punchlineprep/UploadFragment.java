@@ -119,6 +119,8 @@ timer creation
         //stop.setEnabled(false);
         play.setVisibility(View.GONE);
         //play.setEnabled(false);
+        upload.setEnabled(false);
+        upload.setAlpha(128);
 
         // Saves the recording as temp.3gp
         // if "upload" button is never pressed, "temp.3gp" will always be in directory.
@@ -151,6 +153,7 @@ timer creation
                 }
 
                 record.setEnabled(false);
+                record.setAlpha(128);
                 stop.setVisibility(View.VISIBLE);
                 //stop.setEnabled(true);
                 upload.setEnabled(false);
@@ -206,8 +209,10 @@ timer creation
                 play.setVisibility(View.VISIBLE);
                 stop.setVisibility(View.GONE);
                 record.setEnabled(true);
+                record.setAlpha(255);
                 play.setEnabled(true);
                 upload.setEnabled(true);
+                upload.setAlpha(255);
                 seekBar.setProgress(0);
 
             }

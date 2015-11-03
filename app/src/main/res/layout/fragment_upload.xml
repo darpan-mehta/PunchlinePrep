@@ -26,7 +26,8 @@
         android:text="Record"
         android:id= "@+id/record"
         android:layout_gravity="center"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        />
 
     <ImageButton
         android:src="@drawable/uploadplay"
