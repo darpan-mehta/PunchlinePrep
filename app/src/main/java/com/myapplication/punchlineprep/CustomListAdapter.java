@@ -75,8 +75,8 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         ImageButton upVoteBtn = (ImageButton) rowView.findViewById(R.id.upvote);
         ImageButton downVoteBtn = (ImageButton) rowView.findViewById(R.id.downvote);
         final SeekBar seekbar = (SeekBar) rowView.findViewById(R.id.seek_bar);
-        TextView numUpvotes = (TextView) rowView.findViewById(R.id.numUpvotes);
-        TextView numDownvotes = (TextView) rowView.findViewById(R.id.numDownvotes);
+        final TextView numUpvotes = (TextView) rowView.findViewById(R.id.numUpvotes);
+        final TextView numDownvotes = (TextView) rowView.findViewById(R.id.numDownvotes);
         TextView audioLength = (TextView) rowView.findViewById(R.id.audioLength);
         final TextView audioPos = (TextView) rowView.findViewById(R.id.audioPos);
         TextView timeStamp = (TextView) rowView.findViewById(R.id.timestamp);
@@ -244,6 +244,7 @@ Derek - Addition of Seekbar
                     String jokeT = j.getTitle();
                     if (jokename[position].equalsIgnoreCase(jokeT)) {
                         if (j.getVoted().equalsIgnoreCase("false")) {
+                            numUpvotes.setText(String.valueOf(Integer.valueOf(numUpvotes.getText().toString())+1));
                             Log.v(TAG, "JokeT: " + jokeT);
                             String upInStr = j.getUpvotes();
                             Integer upInInt = Integer.valueOf(upInStr);
@@ -276,6 +277,7 @@ Derek - Addition of Seekbar
                     String jokeT = j.getTitle();
                     if (jokename[position].equalsIgnoreCase(jokeT)) {
                         if (j.getVoted().equalsIgnoreCase("false")) {
+                            numDownvotes.setText(String.valueOf(Integer.valueOf(numDownvotes.getText().toString())+1));
                             Log.v(TAG, "JokeT: " + jokeT);
                             String upInStr = j.getDownvotes();
                             Integer upInInt = Integer.valueOf(upInStr);
