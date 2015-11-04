@@ -36,6 +36,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
      MediaPlayer m;
     JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
     boolean start = false;
+    String slash = "/";
 
     int currentPosition;
 
@@ -71,8 +72,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         TextView numUpvotes = (TextView) rowView.findViewById(R.id.numUpvotes);
         TextView numDownvotes = (TextView) rowView.findViewById(R.id.numDownvotes);
         TextView audioLength = (TextView) rowView.findViewById(R.id.audioLength);
-        
-
+        final TextView audioPos = (TextView) rowView.findViewById(R.id.audioPos);
         txtTitle.setText(jokename[position]);
         playBtn.setImageResource(imgid[position]);
         upVoteBtn.setImageResource(upbtnid[position]);
@@ -85,8 +85,9 @@ public class CustomListAdapter extends ArrayAdapter<String> {
             @Override
             public void onClick(View v) throws IllegalArgumentException, SecurityException, IllegalStateException {
 
-                m = new MediaPlayer();
+
                 if (start == false) {
+                    m = new MediaPlayer();
                     String outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                             + "/Punchline/" + jokename[position] + ".3gp";
 
@@ -109,11 +110,13 @@ Derek - Addition of Seekbar
                     seekRun = new Runnable() {
                         public void run() {
                             if (m != null && currentPosition < m.getDuration()) {
-
+                                audioPos.setVisibility(View.VISIBLE);
+                                audioPos.setText(m.getCurrentPosition() / 1000 + " / ");
                                 currentPosition = m.getCurrentPosition();
                                 seekbar.setProgress(currentPosition);
                                 myHandler.postDelayed(this, 1000);
                             } else if (m != null && currentPosition >= m.getDuration()) {
+                                audioPos.setVisibility(View.GONE);
                                 currentPosition = 0;
                                 seekbar.setProgress(currentPosition);
 
@@ -127,7 +130,7 @@ Derek - Addition of Seekbar
                     m.start();
                     start = true;
                 } else {
-                    m.stop();
+                    m.reset();
                     seekbar.setProgress(0);
                     start = false;
                 }

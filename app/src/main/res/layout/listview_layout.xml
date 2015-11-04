@@ -78,11 +78,21 @@
             android:id="@+id/audioLength"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
             android:text="41m"
             android:paddingBottom="20dp"
-            android:textColor="@color/orange"/>
+            android:textColor="@color/orange"
+            android:layout_alignParentBottom="true"
+            android:layout_alignTop="@+id/audioPos" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/audioPos"
+            android:textColor="@color/orange"
+            android:paddingBottom = "20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
 
 
