@@ -39,7 +39,7 @@ public class MainPage extends AppCompatActivity {
 
     public class SampleFragmentPagerAdapter extends FragmentPagerAdapter{
         final int PAGE_COUNT = 4;
-        private String tabTitles[] = new String[] {"Upload", "Feed", "Top Jokes", "My Jokes"};
+        private String tabTitles[] = new String[] {"Record", "Recent", "Top Jokes", "My Jokes"};
 
         public SampleFragmentPagerAdapter(FragmentManager fm) {
             super(fm);

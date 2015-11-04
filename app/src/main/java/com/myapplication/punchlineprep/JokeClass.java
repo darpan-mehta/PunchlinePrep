@@ -11,22 +11,28 @@ public class JokeClass {
     String _upvotes;
     String _downvotes;
     String _length;
+    String _timestamp;
+    String _voted;
 
     public JokeClass(){}
 
-    public JokeClass(int id, String title, String upvotes, String downvotes, String length){
+    public JokeClass(int id, String title, String upvotes, String downvotes, String length, String timestamp, String voted){
         this._id = id;
         this._title = title;
         this._upvotes = upvotes;
         this._downvotes = downvotes;
         this._length = length;
+        this._timestamp = timestamp;
+        this._voted = voted;
     }
 
-    public JokeClass(String title, String upvotes, String downvotes, String length){
+    public JokeClass(String title, String upvotes, String downvotes, String length, String timestamp, String voted){
         this._title = title;
         this._upvotes = upvotes;
         this._downvotes = downvotes;
         this._length = length;
+        this._timestamp = timestamp;
+        this._voted = voted;
     }
 
     public int getID(){
@@ -64,5 +70,13 @@ public class JokeClass {
     public String getLength() {return  this._length;}
 
     public void setLength(String l) {this._length = l;}
+
+    public String getTimestamp(){return  this._timestamp;}
+
+    public void setTimestamp(String t) {this._timestamp = t;}
+
+    public String getVoted() {return this._voted;}
+
+    public void setVoted(String tf) {this._voted = tf;}
 
 }

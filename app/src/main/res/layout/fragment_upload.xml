@@ -1,7 +1,8 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
 <LinearLayout
     android:orientation="vertical"
@@ -15,6 +16,7 @@
         android:hint="Enter a Joke Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="textCapWords"
         android:imeOptions="actionDone"
         android:layout_gravity="center"
         android:textSize="20pt"/>

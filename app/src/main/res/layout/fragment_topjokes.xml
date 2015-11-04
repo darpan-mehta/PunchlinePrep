@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refreshTOP"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/bar"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:textSize="20sp"
-        android:background="@color/lightBlue"
-        android:textColor="@color/black"
-        android:text="Top Jokes Fragment"
-        android:gravity="center"
-        android:padding="5dp"
-        android:layout_marginBottom="20dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
 
-</LinearLayout>
+        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/topjokes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:dividerHeight="3dip"
+            android:divider="@color/green"/>
+
+    </RelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

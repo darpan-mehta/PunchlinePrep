@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
@@ -48,6 +50,7 @@ public class UploadFragment extends Fragment{
     boolean timerStarted;
     private Handler myHandler;
     private Runnable seekRun;
+    private Boolean rerecord = false;
 
     private Thread progressBarThread;
     private int maxProgress;
@@ -102,7 +105,6 @@ timer creation
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
 
 
 
@@ -115,6 +117,7 @@ timer creation
         record = (ImageButton) view.findViewById(R.id.record);
         upload = (ImageButton) view.findViewById(R.id.upload);
         seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
+        seekBar.setVisibility(View.INVISIBLE);
 
         stop.setVisibility(View.GONE);
         //stop.setEnabled(false);
@@ -132,35 +135,91 @@ timer creation
             @Override
             public void onClick(View v) {
 
-                myAudioRecorder = new MediaRecorder();
-                myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-                myAudioRecorder.setOutputFile(outputFile);
+                if(rerecord){
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    seekBar.setVisibility(View.VISIBLE);
+                                    //Yes button clicked
+                                    myAudioRecorder = new MediaRecorder();
+                                    myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                                    myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                                    myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+                                    myAudioRecorder.setOutputFile(outputFile);
 
-                if (!timerStarted) {
-                    timer.start();
-                    timerStarted = true;
+                                    if (!timerStarted) {
+                                        timer.start();
+                                        timerStarted = true;
+                                    }
+
+                                    try {
+                                        myAudioRecorder.prepare();
+                                        myAudioRecorder.start();
+
+                                    } catch (IllegalStateException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e1) {
+                                        e1.printStackTrace();
+                                    }
+
+                                    record.setEnabled(false);
+                                    record.setAlpha(128);
+                                    stop.setVisibility(View.VISIBLE);
+                                    //stop.setEnabled(true);
+                                    upload.setEnabled(false);
+                                    play.setVisibility(View.GONE);
+
+                                    Toast.makeText(getActivity().getApplicationContext(), "Recording starting", Toast.LENGTH_LONG).show();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    //No button clicked
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setMessage("Are you sure you want to record a new Joke? Your previous joke will be overwritten.").setPositiveButton("Confirm", dialogClickListener)
+                            .setNegativeButton("Cancel", dialogClickListener).show();
+
+                }
+                else{
+                    seekBar.setVisibility(View.VISIBLE);
+                    myAudioRecorder = new MediaRecorder();
+                    myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+                    myAudioRecorder.setOutputFile(outputFile);
+
+                    if (!timerStarted) {
+                        timer.start();
+                        timerStarted = true;
+                    }
+
+                    try {
+                        myAudioRecorder.prepare();
+                        myAudioRecorder.start();
+
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    record.setEnabled(false);
+                    record.setAlpha(128);
+                    stop.setVisibility(View.VISIBLE);
+                    //stop.setEnabled(true);
+                    upload.setEnabled(false);
+                    play.setVisibility(View.GONE);
+
+                    Toast.makeText(getActivity().getApplicationContext(), "Recording starting", Toast.LENGTH_LONG).show();
                 }
 
-                try {
-                    myAudioRecorder.prepare();
-                    myAudioRecorder.start();
 
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-
-                record.setEnabled(false);
-                record.setAlpha(128);
-                stop.setVisibility(View.VISIBLE);
-                //stop.setEnabled(true);
-                upload.setEnabled(false);
-                play.setVisibility(View.GONE);
-
-                Toast.makeText(getActivity().getApplicationContext(), "Recording starting", Toast.LENGTH_LONG).show();
           /*      new CountDownTimer(60000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
@@ -210,6 +269,7 @@ timer creation
                 play.setVisibility(View.VISIBLE);
                 stop.setVisibility(View.GONE);
                 record.setEnabled(true);
+                rerecord = true;
                 record.setAlpha(255);
                 play.setEnabled(true);
                 upload.setEnabled(true);
@@ -262,8 +322,14 @@ timer creation
                     public void run() {
                         while (!Thread.interrupted()) {
                             if (m != null) {
-                                currentPosition = m.getCurrentPosition();
-                                updateProgress(currentPosition);
+                                try{
+                                    currentPosition = m.getCurrentPosition();
+                                    updateProgress(currentPosition);
+                                }
+                                catch (IllegalStateException e1){
+                                    e1.printStackTrace();
+                                }
+
 
                                 if (currentPosition >= maxProgress) {
                                     getActivity().runOnUiThread(new Runnable() {
@@ -302,50 +368,68 @@ timer creation
             @Override
             public void onClick(View v) {
 
-                EditText titleHolder = (EditText) getActivity().findViewById(R.id.jokeName);
-                String jokeTitle = titleHolder.getText().toString();
-                Log.v(TAG, jokeTitle);
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                EditText titleHolder = (EditText) getActivity().findViewById(R.id.jokeName);
+                                String jokeTitle = titleHolder.getText().toString();
+                                Log.v(TAG, jokeTitle);
 
-                if(jokeTitle.equals("") || jokeTitle.equals("Enter a Joke Name")){
+                                if(jokeTitle.equals("") || jokeTitle.equals("Enter a Joke Name")){
 
-                    Toast.makeText(getActivity().getApplicationContext(), "Please enter a joke title! Numbnut....", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity().getApplicationContext(), "Please enter a joke title! Numbnut....", Toast.LENGTH_LONG).show();
 
-                }
-                else
-                {
-                    Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG).show();
 
-                    // deletes the file "temp.3gp" and creates a new file with the joke title.
-                    File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
-                    File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
-                    tempJoke.renameTo(myJoke);
+                                    // deletes the file "temp.3gp" and creates a new file with the joke title.
+                                    File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
+                                    File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
+                                    tempJoke.renameTo(myJoke);
+
+                                    Long tsLong = System.currentTimeMillis()/1000;
+                                    String ts = tsLong.toString();
 
 
-                    JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
-                    //jokeDb.delTable();
-                    jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0",audioLength));
+                                    JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
+                                    //jokeDb.delTable();
+                                    jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0",audioLength,ts, "false"));
 
-                    List<JokeClass> jokes = jokeDb.getAllJokes();
-                    String log ="";
-                    for (JokeClass j : jokes) {
-                        log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
-                                + ", Downvotes: " + j.getDownvotes()+"\n";
+                                    List<JokeClass> jokes = jokeDb.getAllJokes();
+                                    String log ="";
+                                    for (JokeClass j : jokes) {
+                                        log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
+                                                + ", Downvotes: " + j.getDownvotes()+"\n";
 
+                                    }
+                                    Log.v(TAG, log);
+
+
+                                    //add insert SQL queries
+
+                                    //Reset Upload Screen
+                                    play.setVisibility(View.GONE);
+                                    seekBar.setProgress(0);
+                                    seekBar.setVisibility(View.INVISIBLE);
+                                    ((TextView) getView().findViewById(R.id.mTextField)).setVisibility(View.GONE);
+                                    ((TextView) getView().findViewById(R.id.jokeName)).setText("");
+                                }
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
                     }
-                    Log.v(TAG, log);
+                };
 
-
-                    //add insert SQL queries
-
-                    //Reset Upload Screen
-                    play.setVisibility(View.GONE);
-                    seekBar.setProgress(0);
-                    ((TextView) getView().findViewById(R.id.mTextField)).setVisibility(View.GONE);
-                    ((TextView) getView().findViewById(R.id.jokeName)).setText("");
-
-
-                }
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setMessage("Confirm Upload?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
 

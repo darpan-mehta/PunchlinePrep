@@ -1,6 +1,8 @@
 package com.myapplication.punchlineprep;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,21 +30,23 @@ import java.util.List;
 public class CustomListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
-    private final String[] jokename, audioTxt;
+    private final String[] jokename, audioTxt, timestampTxt;
     private final Integer[] imgid,upbtnid,downbtnid,upvotesTxt,downvotesTxt;
+    private final String[] votedArr;
     public static final String TAG = "UploadFragment";
     Handler myHandler;
     private Runnable seekRun;
-     MediaPlayer m;
+    private static MediaPlayer m;
     JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
     boolean start = false;
-    String slash = "/";
+    String jokePlayed;
 
     int currentPosition;
 
     public CustomListAdapter(Activity context, String[] jokename, Integer[] imgid,
                              Integer[] upbtnid, Integer[] downbtnid, Integer[] upvotesTxt,
-                             Integer[] downvotesTxt, String[] audioTxt){
+                             Integer[] downvotesTxt, String[] audioTxt, String[] timestampTxt,
+                             String[] votedArr){
         super(context, R.layout.listview_layout, jokename);
         this.context=context;
         this.jokename=jokename;
@@ -52,9 +56,11 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         this.upvotesTxt=upvotesTxt;
         this.downvotesTxt=downvotesTxt;
         this.audioTxt=audioTxt;
+        this.timestampTxt=timestampTxt;
+        this.votedArr=votedArr;
     }
 
-    public View getView(final int position,View view,ViewGroup parent) {
+    public View getView(final int position,View view, final ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView;
 
@@ -65,7 +71,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         }
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.joke);
-        ImageButton playBtn = (ImageButton) rowView.findViewById(R.id.play);
+        final ImageButton playBtn = (ImageButton) rowView.findViewById(R.id.play);
         ImageButton upVoteBtn = (ImageButton) rowView.findViewById(R.id.upvote);
         ImageButton downVoteBtn = (ImageButton) rowView.findViewById(R.id.downvote);
         final SeekBar seekbar = (SeekBar) rowView.findViewById(R.id.seek_bar);
@@ -73,6 +79,9 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         TextView numDownvotes = (TextView) rowView.findViewById(R.id.numDownvotes);
         TextView audioLength = (TextView) rowView.findViewById(R.id.audioLength);
         final TextView audioPos = (TextView) rowView.findViewById(R.id.audioPos);
+        TextView timeStamp = (TextView) rowView.findViewById(R.id.timestamp);
+
+
         txtTitle.setText(jokename[position]);
         playBtn.setImageResource(imgid[position]);
         upVoteBtn.setImageResource(upbtnid[position]);
@@ -80,61 +89,116 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         numUpvotes.setText(upvotesTxt[position].toString());
         numDownvotes.setText(downvotesTxt[position].toString());
         audioLength.setText(audioTxt[position]);
+        timeStamp.setText(timestampTxt[position]);
+
+        playBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                playBtn.setImageResource(R.drawable.stopfeed);
+                m.reset();
+                seekbar.setProgress(0);
+                start = false;
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        playBtn.setImageResource(R.drawable.play);
+                    }
+                }, 800);
+
+                return true;
+            }
+        });
+
+
+
+
 
         playBtn.setOnClickListener(new View.OnClickListener() {
+            int length;
+            boolean paused;
+
+
             @Override
             public void onClick(View v) throws IllegalArgumentException, SecurityException, IllegalStateException {
-
-
-                if (start == false) {
-                    m = new MediaPlayer();
-                    String outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                            + "/Punchline/" + jokename[position] + ".3gp";
-
-                    try {
-                        m.setDataSource(outputFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        m.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-/*
-Derek - Addition of Seekbar
- */
-                    seekbar.setMax(m.getDuration());
-                    myHandler = new Handler();
-                    seekRun = new Runnable() {
-                        public void run() {
-                            if (m != null && currentPosition < m.getDuration()) {
-                                audioPos.setVisibility(View.VISIBLE);
-                                audioPos.setText(m.getCurrentPosition() / 1000 + " / ");
-                                currentPosition = m.getCurrentPosition();
-                                seekbar.setProgress(currentPosition);
-                                myHandler.postDelayed(this, 1000);
-                            } else if (m != null && currentPosition >= m.getDuration()) {
-                                audioPos.setVisibility(View.GONE);
-                                currentPosition = 0;
-                                seekbar.setProgress(currentPosition);
-
-                            }
-                        }
-
-
-                    };
-
-                    seekRun.run();
-                    m.start();
-                    start = true;
-                } else {
+                if (jokePlayed != jokename[position] && jokePlayed != null) {
+                    Log.v("playing", "HJDJSFSDF");
                     m.reset();
                     seekbar.setProgress(0);
                     start = false;
+                    jokePlayed=null;
+                } else {
+                    if (start == false && paused == false) {
+                        m = new MediaPlayer();
+                        jokePlayed = jokename[position];
+                        String outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                                + "/Punchline/" + jokename[position] + ".3gp";
+
+                        try {
+                            m.setDataSource(outputFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            m.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+/*
+Derek - Addition of Seekbar
+ */
+                        seekbar.setMax(m.getDuration());
+                        myHandler = new Handler();
+                        seekRun = new Runnable() {
+                            public void run() {
+                                if (m != null && currentPosition < m.getDuration()) {
+                                    audioPos.setVisibility(View.VISIBLE);
+                                    audioPos.setText(m.getCurrentPosition() / 1000 + " / ");
+                                    currentPosition = m.getCurrentPosition();
+                                    seekbar.setProgress(currentPosition);
+                                    myHandler.postDelayed(this, 1000);
+                                } else if (m != null && currentPosition >= m.getDuration()) {
+                                    audioPos.setVisibility(View.GONE);
+                                    currentPosition = 0;
+                                    seekbar.setProgress(currentPosition);
+                                    playBtn.setImageResource(R.drawable.play);
+                                }
+                            }
+
+
+                        };
+
+                        seekRun.run();
+                        m.start();
+                        start = true;
+                        playBtn.setImageResource(R.drawable.pausefeed);
+                    } else if (start == true && paused == true && m.getCurrentPosition() < m.getDuration()) {
+                        m.seekTo(length);
+                        m.start();
+                        seekRun.run();
+                        playBtn.setImageResource(R.drawable.pausefeed);
+                        length = 0;
+                        paused = false;
+
+
+                    } else if (start == true && paused == false && m.getCurrentPosition() < m.getDuration()) {
+                        m.pause();
+                        length = m.getCurrentPosition();
+                        seekbar.setProgress(length);
+                        playBtn.setImageResource(R.drawable.play);
+                        paused = true;
+
+                    } else {
+                        m.reset();
+                        seekbar.setProgress(0);
+                        start = false;
+                        length = 0;
+                        paused = false;
+                    }
                 }
             }
+
 
         });
 
@@ -162,7 +226,11 @@ Derek - Addition of Seekbar
         seekbar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return true;
+                if (start) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
         });
 
@@ -174,22 +242,28 @@ Derek - Addition of Seekbar
                 List<JokeClass> jokes = jokeDb.getAllJokes();
                 for (JokeClass j : jokes) {
                     String jokeT = j.getTitle();
-                    if(jokename[position].equalsIgnoreCase(jokeT)) {
-                        Log.v(TAG, "JokeT: " + jokeT);
-                        String upInStr = j.getUpvotes();
-                        Integer upInInt = Integer.valueOf(upInStr);
-                        upInInt += 1;
-                        upInStr = upInInt.toString();
-                        j.setUpvotes(upInStr);
-                        jokeDb.updateJoke(j);
+                    if (jokename[position].equalsIgnoreCase(jokeT)) {
+                        if (j.getVoted().equalsIgnoreCase("false")) {
+                            Log.v(TAG, "JokeT: " + jokeT);
+                            String upInStr = j.getUpvotes();
+                            Integer upInInt = Integer.valueOf(upInStr);
+                            upInInt += 1;
+                            upInStr = upInInt.toString();
+                            j.setUpvotes(upInStr);
+                            j.setVoted("true");
+                            jokeDb.updateJoke(j);
+                        } else {
+                            break;
+                        }
 
                     }
-
                     log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
-                            + ", Downvotes: " + j.getDownvotes() + "\n";
-                }
+                            + ", Downvotes: " + j.getDownvotes() + ", Voted?: " + j.getVoted() + "\n";
 
-                Log.v(TAG, log);
+
+                    Log.v(TAG, log);
+
+                }
             }
         });
 
@@ -201,14 +275,21 @@ Derek - Addition of Seekbar
                 for (JokeClass j : jokes) {
                     String jokeT = j.getTitle();
                     if (jokename[position].equalsIgnoreCase(jokeT)) {
-                        Log.v(TAG, "JokeT: " + jokeT);
-                        String upInStr = j.getDownvotes();
-                        Integer upInInt = Integer.valueOf(upInStr);
-                        upInInt += 1;
-                        upInStr = upInInt.toString();
-                        j.setDownvotes(upInStr);
-                        jokeDb.updateJoke(j);
+                        if (j.getVoted().equalsIgnoreCase("false")) {
+                            Log.v(TAG, "JokeT: " + jokeT);
+                            String upInStr = j.getDownvotes();
+                            Integer upInInt = Integer.valueOf(upInStr);
+                            upInInt += 1;
+                            upInStr = upInInt.toString();
+                            j.setDownvotes(upInStr);
+                            j.setVoted("true");
+                            jokeDb.updateJoke(j);
+                        } else {
+                            break;
+                        }
+
                     }
+
                     log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
                             + ", Downvotes: " + j.getDownvotes() + "\n";
                 }
