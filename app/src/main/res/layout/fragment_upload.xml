@@ -57,9 +57,12 @@
         android:layout_centerInParent="true" />
 
     <TextView
-        android:layout_width="196dp"
+        android:layout_width="match_parent"
         android:layout_height="71dp"
         android:id="@+id/mTextField"
+        android:gravity="center"
+        android:textColor="@color/orange"
+        android:textSize="40sp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 

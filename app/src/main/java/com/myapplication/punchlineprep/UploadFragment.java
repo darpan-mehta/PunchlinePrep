@@ -72,7 +72,7 @@ timer creation
             TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
             mTextField.setVisibility(View.VISIBLE);
             mTextField.setText("" + millisUntilFinished / 1000
-                    + ":" + millisUntilFinished % 1000);
+                    + "s");
             seekBar.setMax(90000);
             seekBar.setProgress(90000-(int)millisUntilFinished);
 
@@ -216,7 +216,7 @@ timer creation
                     upload.setEnabled(false);
                     play.setVisibility(View.GONE);
 
-                    Toast.makeText(getActivity().getApplicationContext(), "Recording starting", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Recording starting. You have 90 seconds.", Toast.LENGTH_LONG).show();
                 }
 
 
@@ -254,6 +254,10 @@ timer creation
                 if (timerStarted) {
                     timer.cancel();
                     timerStarted = false;
+                    TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
+                    int endindex = mTextField.getText().toString().indexOf("s");
+
+                    mTextField.setText(String.valueOf(90 - Integer.valueOf(mTextField.getText().toString().substring(0,endindex)))+"s");
                     //  mTextField.setVisibility(View.GONE);
                 }
                 if (progressBarThread != null) {
