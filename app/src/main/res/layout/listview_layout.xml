@@ -82,11 +82,14 @@
 
         <SeekBar
             android:id="@+id/seek_bar"
+            android:thumb="@drawable/orange_circle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:paddingRight="130dp"
             android:paddingEnd="130dp"
+            android:minHeight="3dip"
+            android:maxHeight="3dip"
             android:enabled="false"/>
 
         <TextView

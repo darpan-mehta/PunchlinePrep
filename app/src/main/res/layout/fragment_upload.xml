@@ -21,6 +21,16 @@
         android:layout_gravity="center"
         android:textSize="20pt"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:id="@+id/mTextField"
+        android:gravity="center"
+        android:textColor="@color/orange"
+        android:textSize="40sp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
     <ImageButton
         android:src="@drawable/record"
         android:layout_width="233dp"
@@ -52,19 +62,22 @@
 
     <SeekBar
         android:id="@+id/seek_bar"
+        android:thumb="@drawable/orange_circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:minHeight="3dip"
+        android:maxHeight="3dip"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="71dp"
-        android:id="@+id/mTextField"
-        android:gravity="center"
+        android:layout_width="123dp"
+        android:layout_height="49dp"
+        android:id="@+id/audioPos"
         android:textColor="@color/orange"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_horizontal" />
 
     <ImageButton
         android:src="@drawable/upload"

@@ -2,6 +2,7 @@ package com.myapplication.punchlineprep;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Environment;
@@ -40,6 +41,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
     JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
     boolean start = false;
     String jokePlayed;
+    private Context mContext;
 
     int currentPosition;
 
@@ -58,6 +60,9 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         this.audioTxt=audioTxt;
         this.timestampTxt=timestampTxt;
         this.votedArr=votedArr;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        mContext = context;
+
     }
 
     public View getView(final int position,View view, final ViewGroup parent) {
@@ -75,6 +80,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         ImageButton upVoteBtn = (ImageButton) rowView.findViewById(R.id.upvote);
         ImageButton downVoteBtn = (ImageButton) rowView.findViewById(R.id.downvote);
         final SeekBar seekbar = (SeekBar) rowView.findViewById(R.id.seek_bar);
+        seekbar.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progress_bar));
         final TextView numUpvotes = (TextView) rowView.findViewById(R.id.numUpvotes);
         final TextView numDownvotes = (TextView) rowView.findViewById(R.id.numDownvotes);
         TextView audioLength = (TextView) rowView.findViewById(R.id.audioLength);

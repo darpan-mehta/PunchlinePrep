@@ -10,6 +10,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
@@ -51,6 +52,8 @@ public class UploadFragment extends Fragment{
     private Handler myHandler;
     private Runnable seekRun;
     private Boolean rerecord = false;
+    TextView audioPos;
+
 
     private Thread progressBarThread;
     private int maxProgress;
@@ -70,9 +73,10 @@ timer creation
 
         public void onTick(long millisUntilFinished) {
             TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
+            Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Scoreboard.ttf");
+            mTextField.setTypeface(custom_font);
             mTextField.setVisibility(View.VISIBLE);
-            mTextField.setText("" + millisUntilFinished / 1000
-                    + "s");
+            mTextField.setText(":" + millisUntilFinished / 1000);
             seekBar.setMax(90000);
             seekBar.setProgress(90000-(int)millisUntilFinished);
 
@@ -117,7 +121,10 @@ timer creation
         record = (ImageButton) view.findViewById(R.id.record);
         upload = (ImageButton) view.findViewById(R.id.upload);
         seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
+        seekBar.setProgressDrawable(getResources().getDrawable(R.drawable.progress_bar));
+        audioPos = (TextView) view.findViewById(R.id.audioPos);
         seekBar.setVisibility(View.INVISIBLE);
+
 
         stop.setVisibility(View.GONE);
         //stop.setEnabled(false);
@@ -141,7 +148,7 @@ timer creation
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    seekBar.setVisibility(View.VISIBLE);
+                                   // seekBar.setVisibility(View.VISIBLE);
                                     //Yes button clicked
                                     myAudioRecorder = new MediaRecorder();
                                     myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -187,7 +194,7 @@ timer creation
 
                 }
                 else{
-                    seekBar.setVisibility(View.VISIBLE);
+                  //  seekBar.setVisibility(View.VISIBLE);
                     myAudioRecorder = new MediaRecorder();
                     myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -257,8 +264,8 @@ timer creation
                     TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
                     int endindex = mTextField.getText().toString().indexOf("s");
 
-                    mTextField.setText(String.valueOf(90 - Integer.valueOf(mTextField.getText().toString().substring(0,endindex)))+"s");
-                    //  mTextField.setVisibility(View.GONE);
+                   // mTextField.setText(String.valueOf(90 - Integer.valueOf(mTextField.getText().toString().substring(0,endindex)))+"s");
+                     mTextField.setVisibility(View.GONE);
                 }
                 if (progressBarThread != null) {
                     progressBarThread.interrupt();
@@ -329,10 +336,22 @@ timer creation
                                 try{
                                     currentPosition = m.getCurrentPosition();
                                     updateProgress(currentPosition);
+
                                 }
                                 catch (IllegalStateException e1){
                                     e1.printStackTrace();
                                 }
+                               // audioPos.setVisibility(View.VISIBLE);
+                                if(currentPosition < maxProgress){
+                                    getActivity().runOnUiThread(new Runnable(){
+                                        @Override
+                                        public void run(){
+                                            audioPos.setVisibility(View.VISIBLE);
+                                            audioPos.setText(m.getCurrentPosition() / 1000 + " / " + audioLength);
+                                        }
+                                    });
+                                }
+
 
 
                                 if (currentPosition >= maxProgress) {
@@ -358,6 +377,7 @@ timer creation
                 progressBarThread.start();
 
                 m.start();
+                seekBar.setVisibility(View.VISIBLE);
 
                 Toast.makeText(getActivity().getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
                 play.setVisibility(View.GONE);
@@ -461,6 +481,8 @@ timer creation
                     m.seekTo(progress);
                     m.start();
                 }
+
+
 
             }
         });
