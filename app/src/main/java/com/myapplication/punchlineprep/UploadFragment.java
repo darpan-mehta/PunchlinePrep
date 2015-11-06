@@ -73,7 +73,7 @@ timer creation
 
         public void onTick(long millisUntilFinished) {
             TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
-            Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Scoreboard.ttf");
+            Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/digital7.ttf");
             mTextField.setTypeface(custom_font);
             mTextField.setVisibility(View.VISIBLE);
             mTextField.setText(":" + millisUntilFinished / 1000);

@@ -14,12 +14,18 @@
     <EditText
         android:id="@+id/jokeName"
         android:hint="Enter a Joke Name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textCapWords"
         android:imeOptions="actionDone"
         android:layout_gravity="center"
-        android:textSize="20pt"/>
+        android:background="@drawable/edittext_rounded_corners"
+        android:textSize="17pt"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -27,9 +33,10 @@
         android:id="@+id/mTextField"
         android:gravity="center"
         android:textColor="@color/orange"
-        android:textSize="40sp"
+        android:textSize="60sp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"/>
 
     <ImageButton
         android:src="@drawable/record"
