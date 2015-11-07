@@ -10,6 +10,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -19,6 +20,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,7 +100,9 @@ timer creation
             upload.setEnabled(true);
 
 
-            Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
+         Toast success = Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG);
+            success.setGravity(Gravity.CENTER, 0, 425);
+            success.show();
 
         }
 
@@ -178,7 +182,9 @@ timer creation
                                     upload.setEnabled(false);
                                     play.setVisibility(View.GONE);
 
-                                    Toast.makeText(getActivity().getApplicationContext(), "Recording starting", Toast.LENGTH_LONG).show();
+                                  Toast record =  Toast.makeText(getActivity().getApplicationContext(), "Recording starting", Toast.LENGTH_LONG);
+                                    record.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0 ,0);
+                                    record.show();
                                     break;
 
                                 case DialogInterface.BUTTON_NEGATIVE:
@@ -227,25 +233,6 @@ timer creation
                 }
 
 
-          /*      new CountDownTimer(60000, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                        mTextField.setText("Time Remaining" + millisUntilFinished / 1000);
-                    }
-
-                    public void onFinish() {
-                        myAudioRecorder.stop();
-                        myAudioRecorder.release();
-                        myAudioRecorder = null;
-                        play.setVisibility(View.VISIBLE);
-                        stop.setVisibility(View.GONE);
-                        play.setEnabled(true);
-                        upload.setEnabled(true);
-
-                        Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
-
-                    }
-                }.start();*/
             }
         });
 
@@ -256,7 +243,12 @@ timer creation
                     myAudioRecorder.stop();
                     myAudioRecorder.release();
                     myAudioRecorder = null;
-                    Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
+                    Toast success = Toast.makeText(getActivity().getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG);
+                    success.setGravity(Gravity.CENTER, 0, 425);
+                    success.show();
+
+
+
                 }
                 if (timerStarted) {
                     timer.cancel();
@@ -379,7 +371,10 @@ timer creation
                 m.start();
                 seekBar.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getActivity().getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
+               Toast play_audio = Toast.makeText(getActivity().getApplicationContext(), "Playing audio", Toast.LENGTH_LONG);
+                play_audio.setGravity(Gravity.CENTER, 0, 550);
+                play_audio.show();
+
                 play.setVisibility(View.GONE);
 
                 stop.setVisibility(View.VISIBLE);
@@ -403,12 +398,15 @@ timer creation
 
                                 if(jokeTitle.equals("") || jokeTitle.equals("Enter a Joke Name")){
 
-                                    Toast.makeText(getActivity().getApplicationContext(), "Please enter a joke title! Numbnut....", Toast.LENGTH_LONG).show();
-
+                                  Toast numbnut =  Toast.makeText(getActivity().getApplicationContext(), "Please enter a joke title! Numbnut....", Toast.LENGTH_LONG);
+                                    numbnut.setGravity(Gravity.CENTER, 0, 425);
+                                    numbnut.show();
                                 }
                                 else
                                 {
-                                    Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG).show();
+                                  Toast uploading =  Toast.makeText(getActivity().getApplicationContext(), "Uploading....", Toast.LENGTH_LONG);
+                                    uploading.setGravity(Gravity.CENTER, 0, 425);
+                                    uploading.show();
 
                                     // deletes the file "temp.3gp" and creates a new file with the joke title.
                                     File tempJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/temp.3gp");
@@ -432,13 +430,11 @@ timer creation
                                     }
                                     Log.v(TAG, log);
 
-
-                                    //add insert SQL queries
-
                                     //Reset Upload Screen
                                     play.setVisibility(View.GONE);
                                     seekBar.setProgress(0);
                                     seekBar.setVisibility(View.INVISIBLE);
+                                    audioPos.setVisibility(View.INVISIBLE);
                                     ((TextView) getView().findViewById(R.id.mTextField)).setVisibility(View.GONE);
                                     ((TextView) getView().findViewById(R.id.jokeName)).setText("");
                                 }
