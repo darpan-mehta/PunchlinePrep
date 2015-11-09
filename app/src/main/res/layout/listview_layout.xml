@@ -16,6 +16,8 @@
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"/>
 
+
+
         <TextView
             android:id="@+id/timestamp"
             android:layout_width="wrap_content"
@@ -101,20 +103,19 @@
             android:paddingBottom="20dp"
             android:textColor="@color/orange"
             android:layout_alignParentBottom="true"
-            android:layout_alignTop="@+id/audioPos" />
+            android:paddingRight="90dp"
+            android:paddingEnd="90dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/audioPos"
             android:textColor="@color/orange"
-            android:paddingBottom = "20dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-
-
+            android:gravity="center_horizontal"
+            android:paddingBottom="20dp"
+            android:paddingRight="145dp"
+            android:paddingEnd="145dp"/>
 
     </RelativeLayout>
 
