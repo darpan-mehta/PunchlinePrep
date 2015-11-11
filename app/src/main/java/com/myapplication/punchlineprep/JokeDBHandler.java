@@ -23,10 +23,10 @@ public class JokeDBHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "JokesDB";
 
-    // Contacts table name
+    // Jokes table name
     private static final String JOKES_TABLE = "JokesTable";
 
-    // Contacts Table Columns names
+    // Jokes Table Columns names
     private static final String COL_ID = "id";
     private static final String COL_TITLE = "title";
     private static final String COL_UPVOTES = "upvotes";
@@ -34,6 +34,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
     private static final String COL_LENGTH = "length";
     private static final String COL_TIMESTAMP = "timestamp";
     private static final String COL_VOTED = "voted";
+    private static final String COL_UPLOADED = "uploaded";
 
     public static synchronized JokeDBHandler getInstance(Context context){
         if (sInstance == null){
@@ -55,7 +56,8 @@ public class JokeDBHandler extends SQLiteOpenHelper {
                 + COL_DOWNVOTES + " TEXT,"
                 + COL_LENGTH + " TEXT,"
                 + COL_TIMESTAMP + " TEXT,"
-                + COL_VOTED + " TEXT"
+                + COL_VOTED + " TEXT,"
+                + COL_UPLOADED + " TEXT"
                 + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
@@ -70,11 +72,6 @@ public class JokeDBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void updateTable(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + JOKES_TABLE);
-        onCreate(db);
-    }
 
     public void addJoke(JokeClass joke) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -86,6 +83,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
         values.put(COL_LENGTH, joke.getLength());
         values.put(COL_TIMESTAMP, joke.getTimestamp());
         values.put(COL_VOTED, joke.getVoted());
+        values.put(COL_UPLOADED, joke.getUploaded());
 
         // Inserting Row
         db.insert(JOKES_TABLE, null, values);
@@ -111,6 +109,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
                 joke.setLength(cursor.getString(4));
                 joke.setTimestamp(cursor.getString(5));
                 joke.setVoted(cursor.getString(6));
+                joke.setUploaded(cursor.getString(7));
                 // Adding joke to list
                 jokeList.add(joke);
             } while (cursor.moveToNext());
@@ -125,7 +124,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
 
     public List<JokeClass> getTopJokes() {
         List<JokeClass> jokeList = new ArrayList<JokeClass>();
-        // Select All Query
+        // Select All Query Sort By Upvotes
         String selectQuery = "SELECT  * FROM " + JOKES_TABLE + " ORDER BY " + COL_UPVOTES + " ASC";
         Log.v("mysqlquery",selectQuery);
 
@@ -143,6 +142,40 @@ public class JokeDBHandler extends SQLiteOpenHelper {
                 joke.setLength(cursor.getString(4));
                 joke.setTimestamp(cursor.getString(5));
                 joke.setVoted(cursor.getString(6));
+                joke.setUploaded(cursor.getString(7));
+                // Adding joke to list
+                jokeList.add(joke);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        //db.close();
+
+        // return joke list
+        return jokeList;
+    }
+
+    public List<JokeClass> getUserJokes() {
+        List<JokeClass> jokeList = new ArrayList<JokeClass>();
+        // Select All By User Query
+        String selectQuery = "SELECT  * FROM " + JOKES_TABLE + " WHERE " + COL_UPLOADED + "='user'";
+        Log.v("mysqlquery",selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                JokeClass joke = new JokeClass();
+                joke.setID(Integer.parseInt(cursor.getString(0)));
+                joke.setTitle(cursor.getString(1));
+                joke.setUpvotes(cursor.getString(2));
+                joke.setDownvotes(cursor.getString(3));
+                joke.setLength(cursor.getString(4));
+                joke.setTimestamp(cursor.getString(5));
+                joke.setVoted(cursor.getString(6));
+                joke.setUploaded(cursor.getString(7));
                 // Adding joke to list
                 jokeList.add(joke);
             } while (cursor.moveToNext());
@@ -166,6 +199,17 @@ public class JokeDBHandler extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
+    public int getUserJokeCount() {
+        String countQuery = "SELECT  * FROM " + JOKES_TABLE + " WHERE " + COL_UPLOADED + "='user'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        //cursor.close();
+        //db.close();
+
+        // return count
+        return cursor.getCount();
+    }
+
     public int updateJoke(JokeClass joke) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -176,6 +220,7 @@ public class JokeDBHandler extends SQLiteOpenHelper {
         values.put(COL_LENGTH,joke.getLength());
         values.put(COL_TIMESTAMP,joke.getTimestamp());
         values.put(COL_VOTED, joke.getVoted());
+        values.put(COL_UPLOADED, joke.getUploaded());
 
         // updating row
         return db.update(JOKES_TABLE, values, COL_ID + " = ?",

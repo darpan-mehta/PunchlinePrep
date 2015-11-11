@@ -37,6 +37,7 @@ import java.io.IOException;
 
 /**
  * Created by Darpan on 10/9/2015.
+ * Contributions by Derek Charles, Jit Sun Tung
  *
  */
 public class UploadFragment extends Fragment{
@@ -144,6 +145,7 @@ timer creation
             @Override
             public void onClick(View v) {
 
+                // Check to see if a recording has already been made, but not uploaded
                 if(rerecord){
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
@@ -402,19 +404,20 @@ timer creation
                                     File myJoke = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + jokeTitle+ ".3gp");
                                     tempJoke.renameTo(myJoke);
 
+                                    // Get current epoch tim in millis
                                     Long tsLong = System.currentTimeMillis()/1000;
                                     String ts = tsLong.toString();
 
 
                                     JokeDBHandler jokeDb = JokeDBHandler.getInstance(getContext());
                                     //jokeDb.delTable();
-                                    jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0",audioLength,ts, "false"));
+                                    jokeDb.addJoke(new JokeClass(jokeTitle, "0", "0",audioLength,ts, "false","user"));
 
                                     List<JokeClass> jokes = jokeDb.getAllJokes();
                                     String log ="";
                                     for (JokeClass j : jokes) {
                                         log = log + "ID: " + j.getID() + ", Title: " + j.getTitle() + ", UpVotes: " + j.getUpvotes()
-                                                + ", Downvotes: " + j.getDownvotes()+"\n";
+                                                + ", Downvotes: " + j.getDownvotes()+ ", UploadedBy: " + j.getUploaded()+ "\n";
 
                                     }
                                     Log.v(TAG, log);
@@ -426,6 +429,7 @@ timer creation
                                     audioPos.setVisibility(View.INVISIBLE);
                                     ((TextView) getView().findViewById(R.id.mTextField)).setVisibility(View.GONE);
                                     ((TextView) getView().findViewById(R.id.jokeName)).setText("");
+                                    rerecord = false;
                                 }
                                 break;
 
@@ -436,6 +440,7 @@ timer creation
                     }
                 };
 
+                // Confirmation prompt
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setMessage("Do you think you're funny enough?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();

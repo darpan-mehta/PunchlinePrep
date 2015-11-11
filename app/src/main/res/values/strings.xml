@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PunchlinePrep</string>
+    <string name="preference_file_key">PP_PREFERENCE_KEY</string>
+    <string name="first_time_key">true</string>
 </resources>

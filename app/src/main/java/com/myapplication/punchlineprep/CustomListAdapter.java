@@ -25,7 +25,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by jtung on 10/13/2015.
+ * Created by Jit Sun Tung on 10/13/2015.
+ * Contributions by: Derek Charles, Darpan Mehta
  *
  */
 public class CustomListAdapter extends ArrayAdapter<String> {

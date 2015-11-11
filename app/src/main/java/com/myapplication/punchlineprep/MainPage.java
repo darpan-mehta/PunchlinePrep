@@ -2,6 +2,8 @@ package com.myapplication.punchlineprep;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -24,10 +26,13 @@ import android.view.WindowManager;
 import com.astuetz.PagerSlidingTabStrip;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Darpan on 10/9/2015.
+ * Contributions by Derek Charles, Jit Sun Tung
  *
  */
 public class MainPage extends AppCompatActivity {
@@ -79,13 +84,58 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        // Create filepath for jokes if it does not exist
-        String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/";
-        File f = new File(filepath);
-        if(!f.exists())
-        {
-            f.mkdirs();
+        Context context = this;
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String defaultTimeEntry = "true";
+        String firstTime = sharedPref.getString(getString(R.string.first_time_key),defaultTimeEntry);
+
+        if (firstTime.equalsIgnoreCase("true")){
+            // Create filepath for jokes if it does not exist
+            String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/";
+            File f = new File(filepath);
+            if(!f.exists())
+            {
+                f.mkdirs();
+            }
+
+            JokeDBHandler jokeDb = JokeDBHandler.getInstance(this);
+            //jokeDb.delTable();
+            jokeDb.addJoke(new JokeClass("Blondes & Puzzles", "12", "2","9s","1446692268", "false","system"));
+            jokeDb.addJoke(new JokeClass("Changing My Facebook Name", "33", "4","9s","1446951468", "false","system"));
+            jokeDb.addJoke(new JokeClass("Snowmen vs  Snowladies", "25", "20","6s","1447212571", "false","system"));
+
+            final int[] mSongs = new int[] { R.raw.puzzlejoke, R.raw.fbjoke, R.raw.snowjoke };
+            for (int i = 0; i < mSongs.length; i++) {
+                try {
+                    File dir = new File(filepath);
+                    if (dir.mkdirs() || dir.isDirectory()) {
+                        String str_song_name = i + ".3gp";
+                        CopyRAWtoSDCard(mSongs[i], filepath + File.separator + str_song_name);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            File tempJoke1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/0.3gp");
+            File myJoke1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + "Blondes & Puzzles" + ".3gp");
+            tempJoke1.renameTo(myJoke1);
+
+            File tempJoke2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/1.3gp");
+            File myJoke2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + "Changing My Facebook Name" + ".3gp");
+            tempJoke2.renameTo(myJoke2);
+
+            File tempJoke3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/2.3gp");
+            File myJoke3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/" + "Snowmen vs  Snowladies" + ".3gp");
+            tempJoke3.renameTo(myJoke3);
+
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.first_time_key), "false");
+            editor.commit();
         }
+
 
         name = getIntent().getStringExtra("name");
 
@@ -126,6 +176,23 @@ public class MainPage extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Function
+    // Copies 3 audio files in /res/raw and copies them to sdCard/Internal memory
+    private void CopyRAWtoSDCard(int id, String path) throws IOException {
+        InputStream in = getResources().openRawResource(id);
+        FileOutputStream out = new FileOutputStream(path);
+        byte[] buff = new byte[1024];
+        int read = 0;
+        try {
+            while ((read = in.read(buff)) > 0) {
+                out.write(buff, 0, read);
+            }
+        } finally {
+            in.close();
+            out.close();
+        }
     }
 
 }

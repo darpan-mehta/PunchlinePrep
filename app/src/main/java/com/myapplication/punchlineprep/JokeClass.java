@@ -13,10 +13,11 @@ public class JokeClass {
     String _length;
     String _timestamp;
     String _voted;
+    String _uploaded;
 
     public JokeClass(){}
 
-    public JokeClass(int id, String title, String upvotes, String downvotes, String length, String timestamp, String voted){
+    public JokeClass(int id, String title, String upvotes, String downvotes, String length, String timestamp, String voted, String uploaded){
         this._id = id;
         this._title = title;
         this._upvotes = upvotes;
@@ -24,15 +25,17 @@ public class JokeClass {
         this._length = length;
         this._timestamp = timestamp;
         this._voted = voted;
+        this._uploaded = uploaded;
     }
 
-    public JokeClass(String title, String upvotes, String downvotes, String length, String timestamp, String voted){
+    public JokeClass(String title, String upvotes, String downvotes, String length, String timestamp, String voted, String uploaded){
         this._title = title;
         this._upvotes = upvotes;
         this._downvotes = downvotes;
         this._length = length;
         this._timestamp = timestamp;
         this._voted = voted;
+        this._uploaded = uploaded;
     }
 
     public int getID(){
@@ -78,5 +81,9 @@ public class JokeClass {
     public String getVoted() {return this._voted;}
 
     public void setVoted(String tf) {this._voted = tf;}
+
+    public String getUploaded() {return this._uploaded;}
+
+    public void setUploaded(String s) {this._uploaded = s;}
 
 }

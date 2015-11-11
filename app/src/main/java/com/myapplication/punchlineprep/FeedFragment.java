@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * Created by Darpan on 10/9/2015.
+ * Contributions by Derek Charles, Jit Sun Tung
  *
  */
 public class FeedFragment extends Fragment{
@@ -112,35 +113,6 @@ public class FeedFragment extends Fragment{
             voted[j] = voted[voted.length-j-1];
             voted[voted.length-j-1] = votedtemp;
         }
-
-/*
-        // declare the file path, create a file directory, and create an array of files from that directory.
-        String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/";
-        final File f = new File(filepath);
-        File file[] = f.listFiles();
-
-        // declare arrays of the same length as the number of files in directory
-        itemname = new String[file.length];
-        playBtn = new Integer[file.length];
-        upVoteBtn = new Integer[file.length];
-        downVoteBtn = new Integer[file.length];
-
-        for (int i= 0; i<file.length ; i++) {
-            int endindex = file[i].getName().indexOf(".3gp");
-            itemname[i] = file[i].getName().substring(0,endindex);
-            playBtn[i] = R.drawable.rsz_play; // set the play button for each joke
-            upVoteBtn[i] = R.drawable.rsz_uparrow;
-            downVoteBtn[i] = R.drawable.rsz_downarrow;
-        }
-
-        //If we want to display the array backwards
-        int midPt = itemname.length /2;
-        for (int i = 0; i<midPt; i++){
-            String temp = itemname[i];
-            itemname[i] = itemname[itemname.length-i-1];
-            itemname[itemname.length-i-1] = temp;
-        }*/
-
         CustomListAdapter adapter = new CustomListAdapter(this.getActivity(), itemname, playBtn,
                 upVoteBtn,downVoteBtn,numUpvotes,numDownvotes,audiolength,timestamp,voted);
 
@@ -157,34 +129,9 @@ public class FeedFragment extends Fragment{
 
         return rootView;
     }
+    // Pull-To-Refresh Function
+    // Creates the view again
     private void refreshContent(){
-        // declare the file path, create a file directory, and create an array of files from that directory.
-        /*String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Punchline/";
-        final File f = new File(filepath);
-        File file[] = f.listFiles();
-
-        // declare arrays of the same length as the number of files in directory
-        itemname = new String[file.length];
-        playBtn = new Integer[file.length];
-        upVoteBtn = new Integer[file.length];
-        downVoteBtn = new Integer[file.length];
-
-
-        for (int i= 0; i<file.length ; i++) {
-            int endindex = file[i].getName().indexOf(".3gp");
-            itemname[i] = file[i].getName().substring(0,endindex);
-            playBtn[i] = R.drawable.rsz_play; // set the play button for each joke
-            upVoteBtn[i] = R.drawable.rsz_uparrow;
-            downVoteBtn[i] = R.drawable.rsz_downarrow;
-        }
-
-        //If we want to display the array backwards
-        int midPt = itemname.length /2;
-        for (int i = 0; i<midPt; i++){
-            String temp = itemname[i];
-            itemname[i] = itemname[itemname.length-i-1];
-            itemname[itemname.length-i-1] = temp;
-        }*/
 
         List<JokeClass> jokes = jokeDb.getAllJokes();
         int jokeCount = jokeDb.getJokeCount();
@@ -255,6 +202,7 @@ public class FeedFragment extends Fragment{
 
     }
 
+    // Converts Epoch Time into Regular Time
     public String convertTime(long time){
         Long tsLong = System.currentTimeMillis()/1000;
         Long diff = tsLong-time;

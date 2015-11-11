@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by Darpan on 10/20/2015.
+ * Contributions by Derek Charles, Jit Sun Tung
  *
  */
 public class TopJokesFragment extends Fragment {
