@@ -44,31 +44,35 @@
 
     <ImageButton
         android:src="@drawable/record"
-        android:layout_width="233dp"
-        android:layout_height="233dp"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
         android:text="Record"
         android:id= "@+id/record"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="15dp"
         />
 
     <ImageButton
         android:src="@drawable/uploadplay"
-        android:layout_width="233dp"
-        android:layout_height="233dp"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
         android:text="Play"
         android:id="@+id/play"
         android:layout_gravity="center"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"/>
 
     <ImageButton
         android:src="@drawable/stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
         android:text="Stop"
         android:id= "@+id/stop"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
         />
 
     <SeekBar

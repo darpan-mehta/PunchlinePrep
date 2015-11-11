@@ -95,7 +95,7 @@ timer creation
             myAudioRecorder = null;
 
             play.setVisibility(View.VISIBLE);
-            stop.setVisibility(View.GONE);
+            stop.setVisibility(View.INVISIBLE);
             play.setEnabled(true);
             upload.setEnabled(true);
 
@@ -130,10 +130,8 @@ timer creation
         seekBar.setVisibility(View.INVISIBLE);
 
 
-        stop.setVisibility(View.GONE);
-        //stop.setEnabled(false);
+        stop.setVisibility(View.INVISIBLE);
         play.setVisibility(View.GONE);
-        //play.setEnabled(false);
         upload.setEnabled(false);
         upload.setAlpha(128);
 
@@ -152,7 +150,6 @@ timer creation
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                   // seekBar.setVisibility(View.VISIBLE);
                                     //Yes button clicked
                                     myAudioRecorder = new MediaRecorder();
                                     myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -256,8 +253,7 @@ timer creation
                     TextView mTextField = (TextView) getView().findViewById(R.id.mTextField);
                     int endindex = mTextField.getText().toString().indexOf("s");
 
-                   // mTextField.setText(String.valueOf(90 - Integer.valueOf(mTextField.getText().toString().substring(0,endindex)))+"s");
-                     mTextField.setVisibility(View.GONE);
+                     mTextField.setVisibility(View.INVISIBLE);
                 }
                 if (progressBarThread != null) {
                     progressBarThread.interrupt();
@@ -305,20 +301,7 @@ timer creation
                 Log.v("durationtag","Duration:" + String.valueOf(maxProgress/1000));
                 audioLength = String.valueOf(maxProgress/1000) +"s";
 
-                /*
-                Derek - Handler and Runnable allows for Seekbar update in UI with
-                current position of the MediaPlayer
-                 */
-               /* myHandler = new Handler();
-                seekRun = new Runnable() {
-                    public void run() {
-                        if (m != null) {
-                            currentPosition = m.getCurrentPosition();
-                            seekBar.setProgress(currentPosition);
-                        }
-                        myHandler.postDelayed(this, 1000);
-                    }
-                };*/
+                //ProgressBarThread to keep track of the position of the seekbar
 
                 progressBarThread = new Thread(new Runnable() {
                     @Override
@@ -339,7 +322,13 @@ timer creation
                                         @Override
                                         public void run(){
                                             audioPos.setVisibility(View.VISIBLE);
-                                            audioPos.setText(m.getCurrentPosition() / 1000 + " / " + audioLength);
+                                            try{
+                                                audioPos.setText(m.getCurrentPosition() / 1000 + " / " + audioLength);
+                                            }
+                                            catch (NullPointerException e){
+                                                e.printStackTrace();
+                                            }
+
                                         }
                                     });
                                 }
@@ -448,7 +437,7 @@ timer creation
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setMessage("Confirm Upload?").setPositiveButton("Yes", dialogClickListener)
+                builder.setMessage("Do you think you're funny enough?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
             }
         });
